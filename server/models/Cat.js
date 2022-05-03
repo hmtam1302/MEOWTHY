@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 //CAT SCHEMA
 const CatSchema = new mongoose.Schema({
-    userid: { 
+    userId: { 
       type: mongoose.Types.ObjectId, 
       ref: 'User' ,
     },
-    catname: {
+    catName: {
       type: String,
       required: true,
       minlength: 1,
@@ -31,7 +31,7 @@ const CatSchema = new mongoose.Schema({
       type: String,
       maxlength: 160,
     },
-    defaultcat: Boolean,
+    defaultCat: Boolean,
   });
 
 module.exports = new mongoose.model("Cat", CatSchema);

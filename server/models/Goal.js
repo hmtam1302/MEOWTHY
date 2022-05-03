@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 //GOAL SCHEMA
 const GoalSchema = new mongoose.Schema({
-    catid: { 
+    catId: { 
       type: mongoose.Types.ObjectId, 
       ref: 'Cat' ,
     },
-    catgoal: {
+    catGoal: {
       type: mongoose.Types.Decimal128,
       min: 0,
       max: 25,

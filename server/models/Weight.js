@@ -2,11 +2,11 @@ const mongoose = require("mongoose");
 
 //WEIGHT SCHEMA
 const WeightSchema = new mongoose.Schema({
-    catid: { 
+    catId: { 
       type: mongoose.Types.ObjectId, 
       ref: 'Cat' ,
     },
-    catweight: {
+    catWeight: {
       type: mongoose.Types.Decimal128,
       min: 0,
       max: 25,

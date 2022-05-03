@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 //DIARY SCHEMA
 const DiarySchema = new mongoose.Schema({
-  catid: { 
+  catId: { 
     type: mongoose.Types.ObjectId, 
     ref: 'Cat' ,
   },
