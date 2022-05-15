@@ -36,6 +36,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 const userRouter = require("./routes/User");
 app.use("/user", userRouter);
 
+const tokenRouter = require("./routes/Token");
+app.use("/token", tokenRouter);
+
 //Connect to mongoose
 mongoose
   .connect(process.env.MONGO_URL, {

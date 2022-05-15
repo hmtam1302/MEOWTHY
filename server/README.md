@@ -54,3 +54,5 @@ When starting server, you can check api docs on: [**http://localhost:3000/api-do
 - [**dotenv**](https://www.npmjs.com/package/dotenv): Dotenv is a zero-dependency module that loads environment variables from a `.env` file into `process.env`.
 - [**swagger-ui-express**](https://www.npmjs.com/package/swagger-ui-express): Serve auto-generated swagger-ui generated API docs from express.
 - [**swagger-jsdoc**](https://www.npmjs.com/package/swagger-jsdoc): This library reads your JSDoc-annotated source code and generates an OpenAPI (Swagger) specification.
+- [**random-token**](https://www.npmjs.com/package/random-token): This library helps to create random token.
+- [**nodemailer**](https://www.npmjs.com/package/nodemailer): This library helps to send email.

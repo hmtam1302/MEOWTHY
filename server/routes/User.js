@@ -1,8 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const Token = require("../models/Token");
 //Encrypt password
 const bcrypt = require("bcrypt");
+const randomToken = require('random-token');
+const nodemailer = require("nodemailer");
+
+require("dotenv").config();
 
 //Swagger User schema
 /**
@@ -93,6 +98,44 @@ const bcrypt = require("bcrypt");
  *      required:
  *        - username
  *        - password
+ *      properties:
+ *        username:
+ *          type: string
+ *          description: Username
+ *        password:
+ *          type: string
+ *          description: User password
+ *      example:
+ *        username: username
+ *        password: "123456"
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    UserForgotPassword:
+ *      type: object
+ *      required:
+ *        - email
+ *      properties:
+ *        email:
+ *          type: string
+ *          description: User email
+ *      example:
+ *        email: user@email.com
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    UserCreateNewPassword:
+ *      type: object
+ *      required:
+ *        - username
+ *        - password
+ *        - token
  *      properties:
  *        username:
  *          type: string
@@ -205,9 +248,9 @@ router.post("/signup", async (req, res) => {
         .catch((err) =>
           res
             .status(500)
-            .json({ message: err })
+            .json({ message: JSON.stringify(err) })
         );
-    } catch (err) { res.status(500).json({ message: err }) };
+    } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
   }
 });
 
@@ -258,7 +301,7 @@ router.post("/signin", async (req, res) => {
       } else {
         res.status(500).json({ message: "Wrong password!" });
       }
-    } catch (err) { res.status(500).json({ message: err }) };
+    } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
   }
 });
 
@@ -308,7 +351,7 @@ router.put("/update", async (req, res) => {
       .catch((err) =>
         res
           .status(500)
-          .json({ message: err })
+          .json({ message: JSON.stringify(err) })
       );
   }
 });
@@ -360,7 +403,7 @@ router.delete("/:username", async (req, res) => {
       .catch((err) =>
         res
           .status(500)
-          .json({ message: err })
+          .json({ message: JSON.stringify(err) })
       );
   }
 });
@@ -421,7 +464,260 @@ router.put("/change-password", async (req, res) => {
         res.status(500).json({ message: "Wrong old password! Try again" });
       }
     } catch (err) {
-      res.status(500).json({ message: err });
+      res.status(500).json({ message: JSON.stringify(err) });
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /user/forgot-password:
+ *  post:
+ *    summary: User forgot password
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json: 
+ *          schema:
+ *            $ref: '#/components/schemas/UserForgotPassword'
+ *    responses:
+ *      '200':
+ *        description: Success response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(500).json({ message: "Cannot find user with email provided" });
+  } else {
+    try {
+      const EXPIRE_MINUTES = process.env.EXPIRE_MINUTES || 3;
+      const TOKEN_LENGTH = process.env.TOKEN_LENGTH || 8;
+
+      const expireDate = new Date().setMinutes(new Date().getMinutes() + EXPIRE_MINUTES);
+      let value = null;
+      while (true) {
+        value = randomToken(TOKEN_LENGTH);
+        const response = await Token.findOne({ value });
+        if (!response) break;
+      }
+
+      const token = new Token({
+        value,
+        expireDate,
+      })
+
+      const EMAIL = process.env.EMAIl;
+      const PASSWORD = process.env.PASSWORD;
+
+      token
+        .save()
+        .then(() => {
+          //Send token to email
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: EMAIL,
+              pass: PASSWORD
+            },
+          });
+
+          var mailOptions = {
+            from: EMAIL,
+            to: email,
+            subject: "Change password",
+            text: `Your token: ${value}\nThis token is expire after ${EXPIRE_MINUTES}.`,
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              res.status(500).json({ message: `Send forgot password failed.\n${JSON.stringify(error)}` });
+            } else {
+              res.status(200).json({ message: "Send success!" });
+            }
+          });
+        })
+        .catch((err) =>
+          res
+            .status(500)
+            .json({ message: JSON.stringify(err) })
+        );
+    } catch (err) {
+      res.status(500).json({ message: JSON.stringify(err) })
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /user/create-new-password:
+ *  post:
+ *    summary: User create new password
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json: 
+ *          schema:
+ *            $ref: '#/components/schemas/UserForgotPassword'
+ *    responses:
+ *      '200':
+ *        description: Success response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+router.post("/forgot-password", async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    res.status(500).json({ message: "Cannot find user with email provided" });
+  } else {
+    try {
+      const EXPIRE_MINUTES = process.env.EXPIRE_MINUTES || 3;
+      const TOKEN_LENGTH = process.env.TOKEN_LENGTH || 8;
+
+      const expireDate = new Date().setMinutes(new Date().getMinutes() + EXPIRE_MINUTES);
+      let value = null;
+      while (true) {
+        value = randomToken(TOKEN_LENGTH);
+        const response = await Token.findOne({ value });
+        if (!response) break;
+      }
+
+      const token = new Token({
+        value,
+        expireDate,
+      })
+
+      const EMAIL = process.env.EMAIl;
+      const PASSWORD = process.env.PASSWORD;
+
+      token
+        .save()
+        .then(() => {
+          //Send token to email
+          const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              user: EMAIL,
+              pass: PASSWORD
+            },
+          });
+
+          var mailOptions = {
+            from: EMAIL,
+            to: email,
+            subject: "Change password",
+            text: `Your token: ${value}\nThis token is expire after ${EXPIRE_MINUTES}.`,
+          };
+
+          transporter.sendMail(mailOptions, function (error, info) {
+            if (error) {
+              res.status(500).json({ message: `Send forgot password failed.\n${JSON.stringify(error)}` });
+            } else {
+              res.status(200).json({ message: "Send success!" });
+            }
+          });
+        })
+        .catch((err) =>
+          res
+            .status(500)
+            .json({ message: JSON.stringify(err) })
+        );
+    } catch (err) {
+      res.status(500).json({ message: JSON.stringify(err) })
+    }
+  }
+});
+
+/**
+ * @swagger
+ * /user/create-new-password:
+ *  post:
+ *    summary: User change password
+ *    tags: [User]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json: 
+ *          schema:
+ *            $ref: '#/components/schemas/UserCreateNewPassword'
+ *    responses:
+ *      '200':
+ *        description: Success response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+router.post("/create-new-password", async (req, res) => {
+  const { username, password } = req.body;
+  const user = await User.findOne({ username });
+  if (!user) {
+    res.status(500).json({ message: "Cannot find user!" });
+  } else {
+    try {
+      User.findOneAndUpdate({ username }, { password: bcrypt.hashSync(password, 10) })
+        .then(() => res.status(200).json({ message: "Create password successful!" }))
+        .catch((err) =>
+          res
+            .status(500)
+            .json({ message: JSON.stringify(err) })
+        );
+    } catch (err) {
+      res.status(500).json({ message: JSON.stringify(err) })
     }
   }
 });
