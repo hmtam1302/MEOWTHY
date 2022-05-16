@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Token = require("../models/Token");
+const Cat = require('../models/Cat');
+const Weight = require('../models/Weight');
+const Goal = require('../models/Goal');
+
 //Encrypt password
 const bcrypt = require("bcrypt");
 const randomToken = require('random-token');
@@ -37,6 +41,72 @@ require("dotenv").config();
  *        password: "123456"
  *        email: user@email.com
  *        phone: "0123456789"
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    UserSignUp:
+ *      type: object
+ *      required:
+ *        - user 
+ *        - cat
+ *      properties:
+ *        user:
+ *          type: object
+ *          properties:
+ *            username:
+ *              type: string
+ *              description: Username
+ *            password:
+ *              type: string
+ *              description: User password
+ *            email:
+ *              type: string
+ *              description: User email
+ *            phone:
+ *              type: string
+ *              description: User mobile phone
+ *        cat:
+ *          type: object
+ *          properties:
+ *            catName: 
+ *              type: string
+ *              description: Cat name
+ *            weight: 
+ *              type: string
+ *              description: Cat weight
+ *            sex: 
+ *              type: string
+ *              description: Cat sex
+ *            breed: 
+ *              type: string
+ *              description: Cat breed
+ *        goal:
+ *          type: object
+ *          properties:
+ *            catGoal: 
+ *              type: string
+ *              description: Cat goal
+ *      example:
+ *        user: {
+ *          username: username,
+ *          password: "123456",
+ *          email: user@email.com,
+ *          phone: "0123456789",
+ *        }
+ *        cat: {
+ *          catName: Meow,
+ *          weight: 2.0,
+ *          sex: Đực,
+ *          breed: Mèo ta
+ *        }
+ *        goal: {
+ *          catGoal: 1.5,
+ *        }
+ *        
+ *        
  */
 
 /**
@@ -197,14 +267,14 @@ router.get('/:username', async (req, res) => {
  * @swagger
  * /user/signup:
  *  post:
- *    summary: Signup new user
+ *    summary: Signup new user and register cat
  *    tags: [User]
  *    requestBody:
  *      required: true
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/User'
+ *            $ref: '#/components/schemas/UserSignUp'
  *    responses:
  *      '200':
  *        description: Success response
@@ -229,27 +299,51 @@ router.get('/:username', async (req, res) => {
  *
  */
 router.post("/signup", async (req, res) => {
-  const { username, password, email, phone } = req.body;
+  const { user, cat, goal } = req.body;
+  const { username, password, email, phone } = user;
   const response = await User.find({ username });
   if (response.length > 0) {
     res.status(500).json({ message: "Username has been registered!" });
   } else {
     try {
-      const user = new User({
+      const dbUser = new User({
         username: username,
         password: bcrypt.hashSync(password, 10),
         email,
         phone
       });
 
-      user
-        .save()
-        .then(() => res.status(200).json({ message: "Signup success!" }))
-        .catch((err) =>
-          res
-            .status(500)
-            .json({ message: JSON.stringify(err) })
-        );
+      // Save user to db
+      const responseUser = await dbUser.save();
+
+      // Save cat to db
+      const { catName, sex, breed, weight } = cat;
+      const dbCat = new Cat({
+        userId: responseUser._id,
+        catName, sex, breed,
+      })
+
+      const responseCat = await dbCat.save();
+
+      //Save weight
+      const dbWeight = new Weight({
+        catId: responseCat._id,
+        catWeight: weight
+      });
+
+      await dbWeight.save();
+
+      //Save goal
+      const { catGoal } = goal;
+      const dbGoal = new Goal({
+        catId: responseCat._id,
+        catGoal,
+        date: new Date() // Check later
+      })
+
+      await dbGoal.save();
+      res.status(200).json({ message: "Create user successfully!" });
+
     } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
   }
 });
