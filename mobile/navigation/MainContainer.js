@@ -12,16 +12,24 @@ import Notification from "./screen/Notification";
 import User from "./screen/User";
 import AboutCat from "./screen/AboutCat";
 import Exercise from "./screen/Exercise";
+import Home from "./screen/Home";
+import ListCat from "./screen/ListCat";
+import AddCat from "./screen/AddCat";
+import UpdateCat from "./screen/UpdateCat";
 
 const nameDiary = "Diary";
 const nameNotification = "Notification";
 const nameUser = "User";
 const nameAboutCat = "AboutCat";
 const nameExercise = "Exercise";
+const nameHome = "Home";
+const nameListCat = "ListCat";
+const nameAddCat = "AddCat";
+const nameUpdateCat = "UpdateCat";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+const HStack = createNativeStackNavigator();
 function DiaryStack() {
   return (
     <Stack.Navigator initialRouteName={nameDiary}>
@@ -44,23 +52,53 @@ function DiaryStack() {
   );
 }
 
+function HomeStack(){
+  return(
+    <HStack.Navigator initialRouteName={nameHome}>
+      <HStack.Screen
+        name={nameHome}
+        component={Home}
+        options={{ headerShown: false }}
+      />
+      <HStack.Screen
+        name={nameListCat}
+        component={ListCat}
+        options={{ headerShown: false }}
+      />
+      <HStack.Screen
+        name={nameAddCat}
+        component={AddCat}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name={nameUpdateCat}
+        component={UpdateCat}
+        options={{ headerShown: false }}
+      />
+    </HStack.Navigator>
+  );
+}
+
 function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName={nameDiary}
+        initialRouteName={nameHome}
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             let rn = route.name;
-
+            
             if (rn === nameDiary) {
               iconName = focused ? "calendar" : "calendar-outline";
             } else if (rn === nameNotification) {
               iconName = focused ? "notifications" : "notifications-outline";
             } else if (rn === nameUser) {
               iconName = focused ? "person" : "person-outline";
+            } else if (rn === nameHome) {
+              iconName = focused ? "home" : "home-outline";
             }
+
             return <Ionicons name={iconName} size={size} color={color} />;
           },
           tabBarActiveTintColor: colors.yellow,
@@ -71,6 +109,11 @@ function MainContainer() {
           style: { padding: 10, height: 70 },
         }}
       >
+        <Tab.Screen
+          options={{headerShown:false}}
+          name={nameHome}
+          component={HomeStack}
+        />
         <Tab.Screen
           options={{ headerShown: false }}
           name={nameDiary}
