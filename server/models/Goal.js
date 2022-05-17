@@ -7,7 +7,7 @@ const GoalSchema = new mongoose.Schema({
       ref: 'Cat' ,
     },
     catGoal: {
-      type: mongoose.Types.Decimal128,
+      type: Number,
       min: 0,
       max: 25,
     },

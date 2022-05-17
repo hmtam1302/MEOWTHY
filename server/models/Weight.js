@@ -7,7 +7,7 @@ const WeightSchema = new mongoose.Schema({
       ref: 'Cat' ,
     },
     catWeight: {
-      type: mongoose.Types.Decimal128,
+      type: Number,
       min: 0,
       max: 25,
     },

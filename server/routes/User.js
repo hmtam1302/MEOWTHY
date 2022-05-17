@@ -328,7 +328,8 @@ router.post("/signup", async (req, res) => {
       //Save weight
       const dbWeight = new Weight({
         catId: responseCat._id,
-        catWeight: weight
+        catWeight: weight,
+        date: new Date()
       });
 
       await dbWeight.save();
@@ -338,7 +339,7 @@ router.post("/signup", async (req, res) => {
       const dbGoal = new Goal({
         catId: responseCat._id,
         catGoal,
-        date: new Date() // Check later
+        date: new Date()
       })
 
       await dbGoal.save();

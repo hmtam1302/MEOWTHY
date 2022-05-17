@@ -39,6 +39,9 @@ app.use("/user", userRouter);
 const tokenRouter = require("./routes/Token");
 app.use("/token", tokenRouter);
 
+const catRouter = require("./routes/Cat");
+app.use("/cat", catRouter);
+
 //Connect to mongoose
 mongoose
   .connect(process.env.MONGO_URL, {
