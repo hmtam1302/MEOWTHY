@@ -22,14 +22,14 @@ const nameNotification = "Notification";
 const nameUser = "User";
 const nameAboutCat = "AboutCat";
 const nameExercise = "Exercise";
-const nameHome = "Nhà";
+const nameHome = "Home";
 const nameListCat = "ListCat";
 const nameAddCat = "AddCat";
 const nameUpdateCat = "UpdateCat";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-const HStack = createNativeStackNavigator();
+//const HStack = createNativeStackNavigator();
 function DiaryStack() {
   return (
     <Stack.Navigator initialRouteName={nameDiary}>
@@ -54,18 +54,18 @@ function DiaryStack() {
 
 function HomeStack(){
   return(
-    <HStack.Navigator initialRouteName={nameHome}>
-      <HStack.Screen
+    <Stack.Navigator initialRouteName={nameHome}>
+      <Stack.Screen
         name={nameHome}
         component={Home}
         options={{ headerShown: false }}
       />
-      <HStack.Screen
+      <Stack.Screen
         name={nameListCat}
         component={ListCat}
         options={{ headerShown: false }}
       />
-      <HStack.Screen
+      <Stack.Screen
         name={nameAddCat}
         component={AddCat}
         options={{ headerShown: false }}
@@ -75,7 +75,7 @@ function HomeStack(){
         component={UpdateCat}
         options={{ headerShown: false }}
       />
-    </HStack.Navigator>
+    </Stack.Navigator>
   );
 }
 

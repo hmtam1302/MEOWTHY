@@ -40,7 +40,7 @@ function ListCat({ navigation }) {
           <Text style={styles.titleTitle}>Danh sách </Text>
           
         </View>
-        <Text style={{color: colors.white, fontSize: 16, fontSize: '400', paddingLeft: 20}}> Các bé đang ở bên bạn </Text>
+        <Text style={{color: colors.white, fontSize: 16, fontWeight: '400', paddingLeft: 20}}> Các bé đang ở bên bạn </Text>
         <View style={styles.itemWrap}>
           <FlatList
             showsHorizontalScrollIndicator={false}

@@ -7,8 +7,8 @@ const Stack = createNativeStackNavigator();
 import MainContainer from "./navigation/MainContainer";
 import LoginSign from "./navigation/LoginSign";
 function App() {
-  //return <MainContainer />;
-  return <LoginSign />;
+  return <MainContainer />;
+  //return <LoginSign />;
 }
 
 export default App;
