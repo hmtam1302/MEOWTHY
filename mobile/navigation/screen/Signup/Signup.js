@@ -17,7 +17,7 @@ function Signup({navigation}) {
                 <Text style={styles.titleTitle}> Meowthy </Text>
                 <Image 
                     style={styles.logo} 
-                    source={require("../../../assets/image/logo.png")}  
+                    source={require("../../../assets/image/whitelogo.png")}  
                     resizeMode="stretch"
                 /> 
             </View>
