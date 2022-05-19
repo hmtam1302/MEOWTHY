@@ -14,7 +14,7 @@ const image = require("../../../assets/image/bgyl.png");
 function Signup2({navigation}) {
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}  style={{paddingLeft: 30}}>
             <Ionicons
               name="arrow-back-outline"
               size={32}
@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         color: colors.white,
       },
     footer:{
+        marginTop: -90,
         flex:1,
         paddingLeft: 30,
         paddingRight: 30,

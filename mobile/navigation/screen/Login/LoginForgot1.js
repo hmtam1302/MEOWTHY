@@ -13,7 +13,7 @@ const image = require("../../../assets/image/bgpurple.png");
 function LoginForgot1({navigation}) {
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{paddingLeft: 30}}>
             <Ionicons
               name="arrow-back-outline"
               size={32}
@@ -23,8 +23,8 @@ function LoginForgot1({navigation}) {
           </TouchableOpacity>
 
       <View style={styles.header}>
-        <Text style={styles.titleTitle}> Quên mật khẩu </Text>
-        <Text style={styles.subtt}> Vui lòng nhập số điện thoại để nhập mã xác thực </Text>
+        <Text style={styles.titleTitle}>Quên mật khẩu </Text>
+        <Text style={styles.subtt}>Vui lòng nhập số điện thoại để nhập mã xác thực </Text>
 
       </View>
       <View style={styles.footer}>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   header:{
     flex: 1,  
-    paddingTop: 50,
+    paddingTop: 10,
     paddingLeft: 30,  
   },
   

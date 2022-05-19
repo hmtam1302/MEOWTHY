@@ -14,14 +14,14 @@ function Signup({navigation}) {
     <ImageBackground source={image} style={styles.imageBgContainer}>
         <View style={styles.header}>
             <View style={{flexDirection: 'row', paddingTop: 50}}> 
-                <Text style={styles.titleTitle}> Meowthy </Text>
+                <Text style={styles.titleTitle}>Meowthy </Text>
                 <Image 
                     style={styles.logo} 
                     source={require("../../../assets/image/whitelogo.png")}  
-                    resizeMode="stretch"
+                    resizeMode="contain"
                 /> 
             </View>
-            <Text style={styles.titleTitle}> Đăng ký </Text>
+            <Text style={styles.titleTitle_s}>Đăng ký </Text>
         </View>
 
         <View style={styles.footer}>
@@ -65,21 +65,27 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     header:{
-        flex: 1,    
+        flex: 1,
+        paddingTop: 0,    
       },
 
     titleTitle: {
         paddingLeft: 30,
-        paddingVertical: 10,
-        fontSize: 32,
-        fontWeight: "bold",
+        fontSize: 48,
+        fontWeight: "400",
         color: colors.white,
       },
+    titleTitle_s:{
+      paddingLeft: 30,
+      fontSize: 32,
+      fontWeight: "600",
+      color: colors.white,
+    },
     logo:{
         justifyContent: 'center',
         alignSelf:'center',
-        width: 50,
-        height: 50,
+        width: 90,
+        height: 90,
       },
     footer:{
         flex:1,

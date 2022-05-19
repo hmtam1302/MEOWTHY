@@ -1,7 +1,7 @@
 import * as React from "react";
 import {
   Text,  View,  StyleSheet,  SafeAreaView,  ImageBackground,
-  Image,  TextInput,  TouchableOpacity,  ScrollView, Dimensions,
+  Image,  TextInput,  TouchableOpacity,
 } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
@@ -13,7 +13,7 @@ const image = require("../../../assets/image/bgpurple.png");
 function LoginChange({navigation}) {
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
-      <TouchableOpacity onPress={() => navigation.goBack()}>
+      <TouchableOpacity onPress={() => navigation.goBack()} style={{paddingLeft:30}}>
             <Ionicons
               name="arrow-back-outline"
               size={32}
@@ -58,19 +58,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header:{
-    flex: 1,   
+    flex: 1,  
+    paddingTop: 10,
+    paddingLeft: 30,  
   },
   
-  titleTitle: {
-    paddingTop: 50,
-    paddingLeft: 30, 
+  titleTitle: {   
     paddingVertical: 10,
     fontSize: 32,
     fontWeight: "bold",
     color: colors.white,
   },
+  
   subtt:{
-    paddingLeft: 30, 
     fontSize: 16,
     fontWeight: "400",
     color: colors.white,

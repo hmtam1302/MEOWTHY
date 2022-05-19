@@ -16,8 +16,8 @@ function Login({navigation}) {
         <Text style={styles.titleTitle}> Đăng nhập </Text>
         <Image 
         style={styles.logo} 
-        source={require("../../../assets/image/logo.png")}  
-        resizeMode="stretch"
+        source={require("../../../assets/image/whitelogo.png")}  
+        resizeMode="contain"
         /> 
       </View>
       <View style={styles.footer}>
@@ -49,8 +49,8 @@ function Login({navigation}) {
     </ImageBackground>
   );
 }
-const {height} = Dimensions.get("screen");
-const height_logo = height*0.1;
+//const {height} = Dimensions.get("window");
+//const height_logo = height*0.1;
 const styles = StyleSheet.create({
   imageBgContainer: {
     flex: 1,
@@ -70,8 +70,8 @@ const styles = StyleSheet.create({
   logo:{
     justifyContent: 'center',
     alignSelf:'center',
-    width: height_logo,
-    height: height_logo,
+    width: 150,
+    height: 150,
   },
   footer:{
     flex:1,
