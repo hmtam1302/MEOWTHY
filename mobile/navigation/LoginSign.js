@@ -30,7 +30,7 @@ import {
   function LoginSign() {
     return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName={nameLogin}>
+      <Stack.Navigator initialRouteName={nameOnboarding}>
         <Stack.Screen
           name={nameLogin}
           component={Login}
