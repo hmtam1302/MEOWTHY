@@ -96,7 +96,6 @@ const styles = StyleSheet.create({
   },
   titleWrapper:{
     paddingLeft: 10,
-    alignItems: "right",
   },
   
   titleTitle: {

@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleWrapper:{    
-    alignItems: "right",
   },
   avatar: {
     marginTop: 150,
