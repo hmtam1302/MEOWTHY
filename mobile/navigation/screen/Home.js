@@ -13,21 +13,38 @@ import catData from "../../assets/data/catData";
 
 const image = require("../../assets/image/bggreen.png");
 
+
 function Home({ navigation }) {
 
 const [dataCat, setDataCat] = React.useState(...catData);
+
+function Gender (){
+  if (dataCat.gender === "male") {
+    return (
+      <FontAwesome5 name="mars"  color={colors.red} size={16}/>
+      );
+  }
+  else{
+    return(
+      <FontAwesome5 name="venus"  color={colors.red} size={16}/>
+    );
+  }
+}
 return (
 
     <ImageBackground source={image} style={styles.imageBgContainer}>
-        <ScrollView
+      <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
       >
       <SafeAreaView>
         <View style={styles.titleWrapper}>
-        <TouchableOpacity onPress={() => navigation.navigate("ListCat")}>
-            <Image style={{width: 22.5, height: 30}} source={require("../../assets/image/Vector.png")}  />
-        </TouchableOpacity>
+        <View style={{alignSelf: 'flex-end', padding: 10}}>
+          <TouchableOpacity onPress={() => navigation.navigate("ListCat")}>
+            <FontAwesome5 name="clipboard-list"  color={colors.white} size={30}/>
+
+          </TouchableOpacity>
+        </View>
         </View>
         <Image style={styles.avatar} source={require("../../assets/image/cat.png")} />
         
@@ -35,21 +52,17 @@ return (
             <View style={{flexDirection:"row", alignSelf: "center", justifyContent: "center"}}>
 
             <Text style={styles.nameCat}>{dataCat.name}</Text>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("UpdateCat")}
-            >
-              <Feather
-                name="edit-2"
-                size={32}
-                color={colors.black}
-                paddingRight={5}
-              />
+            <TouchableOpacity onPress={() => navigation.navigate("UpdateCat")} style={{justifyContent: "center", marginLeft: 10}}>      
+              <FontAwesome5 name="pen"  color={colors.black} size={24}/>
             </TouchableOpacity>
             </View>
+            <View style={{flexDirection: 'row', justifyContent: 'center'}}>
             <Text style={styles.ageCat}>{dataCat.age} tháng tuổi</Text>
+            <Gender />
+            </View>
             <Text style={styles.ageCat}> {dataCat.kind} </Text>
             <View style={styles.about}>
-                <Text style={styles.aboutCat}>Về bé:</Text>
+                <Text style={styles.ttCat}>Về bé:</Text>
                 <Text style={styles.aboutCat}>{dataCat.about}</Text>
             </View>
             
@@ -74,12 +87,10 @@ const styles = StyleSheet.create({
   imageBgContainer: {
     flex: 1,
   },
-  titleWrapper:{
-    
+  titleWrapper:{    
     alignItems: "right",
   },
   avatar: {
-    flex: 1,
     marginTop: 150,
     position: "relative",
     width: 150,
@@ -94,12 +105,13 @@ const styles = StyleSheet.create({
 
   },
   container: {
+    flex: 1,
     backgroundColor: colors.white,
     position: "relative",
     marginTop: -50,
     paddingTop: 50,
     width: "100%",
-    height: 450,
+    height: 700,
     borderRadius: 10,
   },
   nameCat: {
@@ -115,13 +127,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.dark_gray,
     paddingBottom: 5,
+    marginRight: 10,
+  },
+  aboutCat:{
+    fontSize: 16,
+    fontWeight: "400",
+    color: colors.black,
   },
   about: {
       alignSelf: "center",
       borderWidth: 1.5,
       borderColor: colors.dark_gray,
       borderRadius: 10,
-      height: 70,
+      height: 80,
       width: "90%",
       padding: 10,
       paddingBottom: 30,
@@ -136,12 +154,12 @@ const styles = StyleSheet.create({
   },
   ttCat:{
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "600",
     color: colors.black,    
   },
   info:{
     fontSize: 24,
-    fontWeight: "bold",
+    fontWeight: "500",
     color: colors.dark_purple,
   }
 });

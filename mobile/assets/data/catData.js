@@ -3,7 +3,7 @@ const catData = [
       catId: "1",
       name: "MeoMeo",
       age: "5",
-      gender: "male",
+      gender: "female",
       kind: "ragdoll",
       about: "Bé rất rất là đáng eo",
       weight: "6",

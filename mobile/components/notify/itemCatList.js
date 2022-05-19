@@ -23,11 +23,11 @@ export default function itemCatList({ item }) {
 
         <View style={styles.weightInfo}>
         <Text style={styles.content}>Hiện tại (kg)</Text>
-        <Text style={styles.content}>{item.weight}</Text>
+        <Text style={styles.contenti}>{item.weight}</Text>
         </View>
         <View style={styles.weightInfo}>
         <Text style={styles.content}>Mục tiêu (kg)</Text>
-        <Text style={styles.content}>{item.target}</Text>
+        <Text style={styles.contenti}>{item.target}</Text>
         </View>
         </View>
       </View>
@@ -51,8 +51,9 @@ const styles = StyleSheet.create({
   },
   leftItem: {
     alignSelf: "center",
-
-    paddingRight: 8,
+    paddingLeft: 10,
+    paddingRight: 15,
+    
   },
   rightItem: {
     flexDirection: "column",
@@ -87,8 +88,13 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   content: {
-    fontSize: 16,
-    fontWeight: "400",
+    fontSize: 10,
+    fontWeight: "600",
     color: colors.black,
   },
+  contenti:{
+    fontSize: 24,
+    fontWeight: "500",
+    color: colors.black,
+  }
 });

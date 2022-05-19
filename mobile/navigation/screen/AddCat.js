@@ -38,43 +38,50 @@ return (
         </TouchableOpacity>
         <View style={styles.titleWrapper}>
             
-          <Text style={styles.titleTitle}>Thêm bé mèo </Text>
+          <Text style={styles.titleTitle}>Thêm </Text>
           
         </View>
         </View>
         <Image style={styles.avatar} source={require("../../assets/image/cat.png")} />
         
         <View style={styles.container}>
-            <TextInput style={styles.info}
-            placeholder={"Tên bé mèo"}
+            <View style={{alignSelf: 'center'}}>
+            <TextInput style={styles.info_tt}
+            placeholder={dataCat.name}
             />
-            <Text style={styles.headertt}>Tuổi</Text>
-            <TextInput style={styles.info}
-            placeholder={"Tuổi"}
-            />
-            <Text style={styles.headertt}>Giới tính</Text>
-            <TextInput style={styles.info}
-            placeholder={"Tên bé mèo"}
-            />
-            <Text style={styles.headertt}>Giống</Text>
-            <TextInput style={styles.info}
-            placeholder={"Tên bé mèo"}
-            />
-            <Text style={styles.headertt}>Cân nặng</Text>
-            <TextInput style={styles.info}
-            placeholder={"Tên bé mèo"}
-            />
+            </View>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={styles.headertt}>Tuổi</Text>
+              <TextInput style={styles.info}
+              placeholder={dataCat.age}
+              />
+              <Text style={styles.headertt}>Giới tính</Text>
+              <TextInput style={styles.info}
+              placeholder={dataCat.gender}
+              />
+            </View>
+            <View style={styles.divinfo}>
+              <Text style={styles.headertt}>Giống</Text>
+              <TextInput style={styles.info}
+              placeholder={dataCat.kind}
+              />
+            </View>
+            <View  style={styles.divinfo}>
+              <Text style={styles.headertt}>Cân nặng</Text>
+              <TextInput style={styles.info}
+              placeholder={dataCat.weight}
+              />
+            </View>
             <TextInput
             style={styles.inputText}
             multiline
             value={value}
             onChangeText={(text) => onChangeText(text)}
             numberOfLines={3}
-            placeholder={"Viết về bé cưng nào !"}/>
+            placeholder={dataCat.about}/>
 
-            <View style={styles.blueButton}>
-                <BlueButton title="Lưu" onPress={()=>alert("lưu")} />
-            </View>
+            <TouchableOpacity style={styles.button} onPress={()=>{alert("thêm thành công"); navigation.navigate("ListCat")}}><Text style={styles.textButton}>Lưu</Text></TouchableOpacity>
+
         </View>
       </SafeAreaView>
       </ScrollView>
@@ -88,8 +95,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleWrapper:{
-    
+    paddingLeft: 10,
     alignItems: "right",
+  },
+  
+  titleTitle: {
+    paddingVertical: 10,
+    fontSize: 32,
+    fontWeight: "bold",
+    color: colors.white,
   },
   avatar: {
     flex: 1,
@@ -109,32 +123,58 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.white,
     position: "relative",
+    justifyContent: 'center',
     marginTop: -50,
     paddingTop: 50,
+    paddingLeft: 30,
+    paddingRight: 30,
     width: "100%",
     height: 450,
     borderRadius: 10,
   },
-  
+  divinfo:{
+    flexDirection: 'row',
+    justifyContent: "space-between",
+  },
   inputText: {
     fontSize: 16,
     fontWeight: "400",
     color: colors.gray,
-    borderColor: colors.dark_yellow,
+    borderColor: colors.dark_gray,
     borderRadius: 16,
-    borderWidth: 1,
+    borderWidth: 1.5,
     backgroundColor: colors.white,
     padding: 10,
     textAlignVertical: "top",
   },
   info:{
-    borderBottomColor: '#000000',
-    borderBottomWidth: 1,
+    borderBottomColor: colors.dark_gray,
+    borderBottomWidth: 1.5,
+    marginBottom: 10,
+    width: "30%",
   },
-  blueButton:{
-    alignItems: "center",
-    paddingTop: 30
-  }
+  
+  info_tt:{
+    borderBottomColor: colors.dark_gray,
+    borderBottomWidth: 1.5,
+    marginBottom: 10,
+    width: 150,
+  },
+  button:{
+    justifyContent:'center',
+    alignItems: 'center',
+    height: 50,
+    borderRadius: 16,
+    backgroundColor: colors.downy,
+    borderColor: colors.downy,
+    borderWidth: 1.5,
+    marginTop: 20,
+  },
+  textButton:{
+    fontWeight: "700",
+    fontSize: 16,
+    color: colors.white,
+  },
 });
 
 export default AddCat;
