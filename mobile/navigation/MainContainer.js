@@ -16,10 +16,15 @@ import Home from "./screen/Home";
 import ListCat from "./screen/ListCat";
 import AddCat from "./screen/AddCat";
 import UpdateCat from "./screen/UpdateCat";
+import Food from "./screen/Food";
+import Report from "./screen/Report";
 
-const nameDiary = "Diary";
-const nameNotification = "Notification";
-const nameUser = "User";
+const nameDiary = "Nhật ký";
+const nameNotification = "Thông Báo";
+const nameUser = "Tôi";
+const nameFood = "Food";
+const nameReport = "Báo cáo";
+
 const nameAboutCat = "AboutCat";
 const nameExercise = "Exercise";
 const nameHome = "Home";
@@ -39,6 +44,11 @@ function DiaryStack() {
         options={{ headerShown: false }}
       />
       <Stack.Screen
+        name={nameFood}
+        component={Food}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
         name={nameAboutCat}
         component={AboutCat}
         options={{ headerShown: false }}
@@ -52,8 +62,8 @@ function DiaryStack() {
   );
 }
 
-function HomeStack(){
-  return(
+function HomeStack() {
+  return (
     <Stack.Navigator initialRouteName={nameHome}>
       <Stack.Screen
         name={nameHome}
@@ -88,7 +98,7 @@ function MainContainer() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
             let rn = route.name;
-            
+
             if (rn === nameDiary) {
               iconName = focused ? "calendar" : "calendar-outline";
             } else if (rn === nameNotification) {
@@ -97,6 +107,8 @@ function MainContainer() {
               iconName = focused ? "person" : "person-outline";
             } else if (rn === nameHome) {
               iconName = focused ? "home" : "home-outline";
+            } else if (rn === nameReport) {
+              iconName = focused ? "bar-chart" : "bar-chart-outline";
             }
 
             return <Ionicons name={iconName} size={size} color={color} />;
@@ -110,7 +122,7 @@ function MainContainer() {
         }}
       >
         <Tab.Screen
-          options={{headerShown:false}}
+          options={{ headerShown: false }}
           name={nameHome}
           component={HomeStack}
         />
@@ -118,6 +130,11 @@ function MainContainer() {
           options={{ headerShown: false }}
           name={nameDiary}
           component={DiaryStack}
+        />
+        <Tab.Screen
+          options={{ headerShown: false }}
+          name={nameReport}
+          component={Report}
         />
         <Tab.Screen
           options={{ headerShown: false }}

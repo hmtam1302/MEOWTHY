@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
+  Modal,
   Image,
 } from "react-native";
 
@@ -14,11 +15,23 @@ import colors from "../../assets/colors/colors";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import userData from "../../assets/data/userData";
 import Feather from "react-native-vector-icons/Feather";
+import EditUserModal from "../../components/modal/EditUserModal.js";
 
 const image = require("../../assets/image/bgpurple.png");
 
 function User({ navigation }) {
   const [dataUser, setDataUser] = React.useState(...userData);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  console.log(dataUser);
+  const changeModalVisible = (bool) => {
+    setIsModalVisible(bool);
+  };
+
+  const updateUser = (name, phone, email) => {
+    setDataUser({ ...userData, username: name, phone, email });
+    console.log(dataUser);
+  };
+
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -40,7 +53,9 @@ function User({ navigation }) {
 
               {/* edit */}
               <TouchableOpacity
-                onPress={() => alert("chỉnh sửa thông tin cá nhân")}
+                onPress={() =>
+                  EditUserModal ? changeModalVisible(true) : alert("loi")
+                }
               >
                 <FontAwesome5
                   name="pen"
@@ -49,6 +64,20 @@ function User({ navigation }) {
                   style={styles.editInfo}
                 />
               </TouchableOpacity>
+
+              <Modal
+                transparent={true}
+                animationType="fade"
+                visible={isModalVisible}
+                nRequestClose={() => {
+                  changeModalVisible;
+                }}
+              >
+                <EditUserModal
+                  changeModalVisible={changeModalVisible}
+                  updateUser={updateUser}
+                />
+              </Modal>
             </View>
           </View>
 

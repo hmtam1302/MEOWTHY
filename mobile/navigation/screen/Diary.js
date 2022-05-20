@@ -73,26 +73,33 @@ function Diary({ navigation }) {
           {/* wrapper 1 */}
           <View style={styles.boxWrapper}>
             {/* thức ăn */}
-            <View style={styles.boxtItem}>
-              <View style={styles.boxWrapperLeft}>
-                <View style={styles.boxWrapperTop}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Text style={styles.text_s16_w600}>Thức ăn </Text>
-                    <Text style={styles.text_s13_w600}>(Kcal)</Text>
-                  </View>
 
-                  <Text style={styles.text_s32_w600}>XXX</Text>
-                  <Text style={styles.text_s13_w400}>Cả ngày</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Food")}>
+              <View style={styles.boxtItem}>
+                <View style={styles.boxWrapperLeft}>
+                  <View style={styles.boxWrapperTop}>
+                    <View style={{ flexDirection: "row" }}>
+                      <Text style={styles.text_s16_w600}>Thức ăn </Text>
+                      <Text style={styles.text_s13_w600}>(Kcal)</Text>
+                    </View>
+
+                    <Text style={styles.text_s32_w600}>XXX</Text>
+                    <Text style={styles.text_s13_w400}>Cả ngày</Text>
+                  </View>
+                  <View style={styles.boxWrapperBottom}>
+                    <Text style={styles.text_s13_600}>Mục tiêu </Text>
+                    <Text style={styles.text_s16_w600}>XXX</Text>
+                  </View>
                 </View>
-                <View style={styles.boxWrapperBottom}>
-                  <Text style={styles.text_s13_600}>Mục tiêu </Text>
-                  <Text style={styles.text_s16_w600}>XXX</Text>
+                <View style={styles.boxWrapperRight}>
+                  <Feather
+                    name="chevron-right"
+                    size={32}
+                    color={colors.black}
+                  />
                 </View>
               </View>
-              <View style={styles.boxWrapperRight}>
-                <Feather name="chevron-right" size={32} color={colors.black} />
-              </View>
-            </View>
+            </TouchableOpacity>
             {/* cân nặng */}
             <View style={styles.boxtItem}>
               <View style={styles.boxWrapperLeft}>
