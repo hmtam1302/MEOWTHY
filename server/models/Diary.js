@@ -7,7 +7,7 @@ const DiarySchema = new mongoose.Schema({
     ref: 'Cat' ,
   },
   date: Date,
-  food: String,
+  food_calories: Number,
   water_amount: Number,
   exercise: {
     type: String,
