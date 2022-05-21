@@ -27,7 +27,7 @@ router.get("/cat/:catId/diary", async (req, res) => {
       });
 
       // Save diary to db
-      const responseDiary = await dbDiary.save();
+      await dbDiary.save();
       res.status(200).json({ message: "Create today diary successfully!" });
 
     } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
