@@ -229,8 +229,6 @@ router.get('/cat/:catId/diary/:date', async (req, res) => {
 })
 
 
-const calcCalories = async (amount, calories) => amount/100*calories;
-
 
 /**
  * @swagger
@@ -325,14 +323,12 @@ router.get('/cat/:catId/diary/:date/food', async (req, res) => {
 
 router.post("/cat/:catId/diary/:date/food", async (req, res) => {
   const { catId, diary_date } = req.params
-  const { foodname, amount } = req.body;
+  const { foodname, amount, calories } = req.body;
   const diary = await Diary.find({ catId: catId, date : diary_date });
   if (diary.length === 0) {
     res.status(500).json({ message: "Diary at the date of catId not found" });
   } else {
     try {
-      const food = await Food.find({ name : foodname });
-      let calories = await calcCalories(amount, food._doc.calories);
       const dbFedFood = new FedFood({
         diaryId: diary._id,
         name: foodname,
@@ -464,14 +460,12 @@ router.get("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
 
 router.put("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
   const { catId, diary_date, foodId } = req.params
-  const { foodname, amount } = req.body;
+  const { foodname, amount, calories } = req.body;
   const diary = await Diary.find({ catId: catId, date : diary_date });
   if (diary.length === 0) {
     res.status(500).json({ message: "Diary at the date not found" });
   } else {
-      const food = await Food.find({ name : foodname });
       const fed_food = await FedFood.find({ _id: foodId })
-      let calories = await calcCalories(amount, food._doc.calories);
       diary._doc.food_calories += calories - fed_food.calories;
       FedFood.findOneAndUpdate({ _id : foodId }, {name : foodname, amount : amount, calories : calories})
       .then(() => {
