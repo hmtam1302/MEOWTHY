@@ -6,6 +6,104 @@ const Goal = require('../models/Goal');
 require("dotenv").config();
 
 
+//Swagger Goal, Weight schema
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    CatWeight:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *          description: CatWeight Id
+ *        catId:
+ *          type: string
+ *          description: Cat's Id
+ *        catWeight:
+ *          type: number
+ *          description: Cat weight
+ *        date:
+ *          type: date
+ *          description: Cat weight create date
+ *      example:
+ *        _id: weight123456789
+ *        catId: cat123456789
+ *        catWeight: 1.5
+ *        date: "2022-05-16T16:55:13.254Z"
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    CatGoal:
+ *      type: object
+ *      properties:
+ *        _id:
+ *          type: string
+ *          description: CatWeight Id
+ *        catId:
+ *          type: string
+ *          description: Cat's Id
+ *        catGoal:
+ *          type: number
+ *          description: Cat goal weight
+ *        date:
+ *          type: date
+ *          description: Cat goal create date
+ *      example:
+ *        _id: weight123456789
+ *        catId: cat123456789
+ *        catGoal: 1.5
+ *        date: "2022-05-16T16:55:13.254Z"
+ */
+//------------------------------------------------------
+
+
+/**
+ * @swagger
+ * /cat/{catId}/set-goal:
+ *  post:
+ *    summary: Add a new goal to cat id
+ *    tags: [CatGoal]
+ *    parameters:
+ *      - in: path
+ *        name: catId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Cat Id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json: 
+ *          schema:
+ *            $ref: '#/components/schemas/CatGoal'
+ *    responses:
+ *      '200':
+ *        description: Successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+
 router.post("/cat/:catId/set-goal", async (req, res) => {
   const { catId } = req.params;
   const { goal } = req.body;
@@ -26,6 +124,49 @@ router.post("/cat/:catId/set-goal", async (req, res) => {
   }
 });
 
+
+/**
+ * @swagger
+ * /cat/{catId}/set-weight:
+ *  post:
+ *    summary: Add a new weight to cat id
+ *    tags: [CatWeight]
+ *    parameters:
+ *      - in: path
+ *        name: catId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Cat Id
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json: 
+ *          schema:
+ *            $ref: '#/components/schemas/CatWeight'
+ *    responses:
+ *      '200':
+ *        description: Successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
 
 router.post("/cat/:catId/set-weight", async (req, res) => {
     const { catId } = req.params;
