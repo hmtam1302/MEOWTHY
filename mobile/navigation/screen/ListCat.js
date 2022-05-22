@@ -22,11 +22,8 @@ const image = require("../../assets/image/bggreen.png");
 function ListCat({ navigation }) {
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        showsVerticalScrollIndicator={false}
-      >
       <SafeAreaView>
+        <View style={styles.titleWrapper}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons
               name="arrow-back-outline"
@@ -34,13 +31,11 @@ function ListCat({ navigation }) {
               color={colors.white}
               style={{ marginTop: 6 }}
             />
-        </TouchableOpacity>
-        <View style={styles.titleWrapper}>
-            
-          <Text style={styles.titleTitle}>Danh sách </Text>
+        </TouchableOpacity>            
+        <Text style={styles.titleTitle}>Danh sách </Text>
           
         </View>
-        <Text style={{color: colors.white, fontSize: 16, fontWeight: '400', paddingLeft: 20}}> Các bé đang ở bên bạn </Text>
+        <Text style={styles.subTitle}> Các bé đang ở bên bạn </Text>
         <View style={styles.itemWrap}>
           <FlatList
             showsHorizontalScrollIndicator={false}
@@ -48,14 +43,14 @@ function ListCat({ navigation }) {
             renderItem={itemCatList}
             keyExtractor={(item) => item.id}
           />
+          <View style={styles.addCat}>
+              <TouchableOpacity onPress={() => navigation.navigate("AddCat")}>
+                <FontAwesome5 name="plus-circle"  color={colors.downy} size={50}/>
+              </TouchableOpacity>
+          </View>
         </View>
-        <View style={styles.addCat}>
-            <TouchableOpacity onPress={() => navigation.navigate("AddCat")}>
-              <FontAwesome5 name="plus-circle"  color={colors.downy} size={50}/>
-            </TouchableOpacity>
-        </View>
+
       </SafeAreaView>
-      </ScrollView>
     </ImageBackground>
   );
 }
@@ -64,22 +59,29 @@ const styles = StyleSheet.create({
   imageBgContainer: {
     flex: 1,
   },
-  titleWrapper: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    marginTop: 60,
-    marginLeft: 30,
+  titleWrapper:{
+    paddingLeft: 30,
+    paddingTop: 30,
   },
+  
   titleTitle: {
-    paddingBottom: 10,
     fontSize: 32,
     fontWeight: "bold",
     color: colors.white,
   },
+  subTitle: {
+    color: colors.white, 
+    fontSize: 16, 
+    fontWeight: '400', 
+    paddingLeft: 30, 
+    paddingTop: 20, 
+    paddingBottom: 10
+  },
   itemWrap: {
+    backgroundColor: colors.white,
+    borderRadius: 10,
     padding: 20,
+    height: 900,
   },
   addCat:{
       alignItems: "center",

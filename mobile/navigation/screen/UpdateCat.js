@@ -27,7 +27,7 @@ return (
         showsVerticalScrollIndicator={false}
       >
       <SafeAreaView>
-        <View style={styles.titleWrapper}>
+      <View style={styles.titleWrapper}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons
               name="arrow-back-outline"
@@ -36,11 +36,9 @@ return (
               style={{ marginTop: 6 }}
             />
         </TouchableOpacity>
-        <View style={styles.titleWrapper}>
             
-          <Text style={styles.titleTitle}>Chỉnh sửa </Text>
+        <Text style={styles.titleTitle}>Chỉnh sửa </Text>
           
-        </View>
         </View>
         <Image style={styles.avatar} source={require("../../assets/image/cat.png")} />
         
@@ -80,9 +78,9 @@ return (
             numberOfLines={3}
             placeholder={dataCat.about}/>
 
-            <TouchableOpacity style={styles.button} onPress={()=>{alert("lưu"); navigation.navigate("Home")}}><Text style={styles.textButton}>Lưu</Text></TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={()=>{alert("Sửa thành công"); navigation.navigate("Home")}}><Text style={styles.textButton}>Lưu</Text></TouchableOpacity>
 
-        </View>
+      </View>
       </SafeAreaView>
       </ScrollView>
 
@@ -95,18 +93,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   titleWrapper:{
-    paddingLeft: 10,
+    paddingLeft: 30,
+    paddingTop: 30,
   },
   
   titleTitle: {
-    paddingVertical: 10,
     fontSize: 32,
     fontWeight: "bold",
     color: colors.white,
   },
   avatar: {
     flex: 1,
-    marginTop: 150,
+    marginTop: 80,
     position: "relative",
     width: 150,
     height: 150,
@@ -123,22 +121,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     position: "relative",
     justifyContent: 'center',
-    marginTop: -50,
+    marginTop: -80,
     paddingTop: 50,
     paddingLeft: 30,
     paddingRight: 30,
     width: "100%",
-    height: 450,
+    height: 500,
     borderRadius: 10,
   },
   divinfo:{
     flexDirection: 'row',
     justifyContent: "space-between",
-  },
-  headertt:{
-    fontSize: 16,
-    fontWeight: "400",
-    color: colors.black,
   },
   inputText: {
     fontSize: 16,

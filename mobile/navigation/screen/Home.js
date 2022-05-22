@@ -39,10 +39,9 @@ return (
       >
       <SafeAreaView>
         <View style={styles.titleWrapper}>
-        <View style={{alignSelf: 'flex-end', padding: 10}}>
-          <TouchableOpacity onPress={() => navigation.navigate("ListCat")}>
+        <View style={{alignSelf: 'flex-end', padding: 30}}>
+          <TouchableOpacity onPress={() => navigation.navigate("ListCat")} style={{paddingTop: 20}}>
             <FontAwesome5 name="clipboard-list"  color={colors.white} size={30}/>
-
           </TouchableOpacity>
         </View>
         </View>
@@ -90,7 +89,7 @@ const styles = StyleSheet.create({
   titleWrapper:{    
   },
   avatar: {
-    marginTop: 150,
+    marginTop: 80,
     position: "relative",
     width: 150,
     height: 150,
@@ -107,15 +106,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.white,
     position: "relative",
-    marginTop: -50,
-    paddingTop: 50,
+    marginTop: -80,
+    paddingTop: 80,
     width: "100%",
     height: 700,
     borderRadius: 10,
   },
   nameCat: {
     alignSelf: "center",
-
     paddingVertical: 10,
     fontSize: 32,
     fontWeight: "bold",
@@ -139,7 +137,7 @@ const styles = StyleSheet.create({
       borderColor: colors.dark_gray,
       borderRadius: 10,
       height: 80,
-      width: "90%",
+      width: "85%",
       padding: 10,
       paddingBottom: 30,
       margin: 10,    

@@ -4,9 +4,9 @@ import { Text, View, Image, StyleSheet, TouchableOpacity} from "react-native";
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 
-export default function itemCatList({ item }) {
+export default function itemCatList({ item, navigation }) {
   return (
-    <View style={styles.thongBaoIteamWrapper}>
+    <View style={styles.catItemWrapper}>
       <View style={styles.leftItem}>
         <Image source={item.image} style={styles.profileImage} />
       </View>
@@ -36,7 +36,7 @@ export default function itemCatList({ item }) {
 }
 
 const styles = StyleSheet.create({
-  thongBaoIteamWrapper: {
+  catItemWrapper: {
     flexDirection: "row",
     borderColor: colors.purple,
     borderRadius: 10,
