@@ -20,13 +20,13 @@ const foodData = [
     kcal: 200,
     image: require("../../assets/image/ct.png"),
   },
-  {
-    id: "4",
-    name: "Pate",
-    weight: 300,
-    kcal: 500,
-    image: require("../../assets/image/pate.png"),
-  },
+  // {
+  //   id: "4",
+  //   name: "Pate",
+  //   weight: 300,
+  //   kcal: 500,
+  //   image: require("../../assets/image/pate.png"),
+  // },
 ];
 
 export default foodData;

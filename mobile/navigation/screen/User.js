@@ -16,20 +16,69 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import userData from "../../assets/data/userData";
 import Feather from "react-native-vector-icons/Feather";
 import EditUserModal from "../../components/modal/EditUserModal.js";
+import SelectBox from "react-native-multi-selectbox";
+import axios from "axios";
 
 const image = require("../../assets/image/bgpurple.png");
+
+const K_OPTIONS = [
+  {
+    item: "black cat",
+    id: 1,
+  },
+  {
+    item: "pink cat",
+    id: 2,
+  },
+  {
+    item: "mad cat",
+    id: 3,
+  },
+];
+const username = "username";
+const URL = "http://10.0.2.2:3000/";
 
 function User({ navigation }) {
   const [dataUser, setDataUser] = React.useState(...userData);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-  console.log(dataUser);
+  const [selectedTeam, setSelectedTeam] = React.useState({});
+
+  const getDataUser = async () => {
+    try {
+      const res = await axios.get(`${URL}user/${username}`);
+      setDataUser(res.data.data);
+    } catch (error) {
+      console.log("error:", error);
+      alert(error);
+    }
+  };
+
+  const updateDataUser = async (name, phone, email) => {
+    try {
+      const res = await axios
+        .put(`${URL}user/update`, {
+          username: name,
+          email: email,
+          phone: phone,
+        })
+        .then((response) => console.log(response.data));
+    } catch (error) {
+      console.log("error:", error);
+      alert(error);
+    }
+  };
+
+  React.useEffect(() => {
+    getDataUser();
+  }, []);
+
   const changeModalVisible = (bool) => {
     setIsModalVisible(bool);
   };
 
   const updateUser = (name, phone, email) => {
-    setDataUser({ ...userData, username: name, phone, email });
-    console.log(dataUser);
+    updateDataUser(name, phone, email);
+    setDataUser({ username: name, phone: phone, email: email });
   };
 
   return (
@@ -43,7 +92,12 @@ function User({ navigation }) {
           <View style={styles.wrapTopInfo}>
             <View style={styles.rowSp}>
               <View style={styles.infoWrap}>
-                <Image style={styles.avatar} source={dataUser.image} />
+                <Image
+                  style={styles.avatar}
+                  source={
+                    dataUser.image || require("../../assets/image/cat.png")
+                  }
+                />
                 <View style={styles.info}>
                   <Text style={styles.infoUserName}>{dataUser.username}</Text>
                   <Text style={styles.infoPhone}>{dataUser.phone}</Text>
@@ -89,13 +143,31 @@ function User({ navigation }) {
             </View>
 
             <View style={styles.bottomComponent_PdR20}>
-              <View style={styles.rowSp}>
+              <View style={[styles.rowSp, { paddingBottom: 3 }]}>
                 <Text style={styles.subtitle}>Số lượng mèo</Text>
                 <Text style={styles.subtitle}>3</Text>
               </View>
               <View style={styles.rowSp}>
                 <Text style={styles.subtitle}>Mèo mặc định</Text>
-                <Text style={styles.subtitle}>3</Text>
+                <View style={{ marginBottom: 5 }}>
+                  <SelectBox
+                    containerStyle={{
+                      marginTop: -25,
+                      padding: 10,
+                      borderRadius: 16,
+                      borderWidth: 1.5,
+                      borderColor: colors.gray,
+                    }}
+                    labelStyle={{ fontSize: 13 }}
+                    selectedItemStyle={{ fontSize: 13 }}
+                    optionsLabelStyle={{ fontSize: 13 }}
+                    options={K_OPTIONS}
+                    value={selectedTeam}
+                    label=""
+                    onChange={(val) => setSelectedTeam(val)}
+                    hideInputFilter={true}
+                  />
+                </View>
               </View>
             </View>
           </View>

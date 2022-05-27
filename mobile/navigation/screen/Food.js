@@ -21,7 +21,7 @@ import foodData from "../../assets/data/foodData";
 
 const image = require("../../assets/image/bgyl.png");
 
-function Food({}) {
+function Food({ navigation }) {
   const [dataFood, setDataFood] = React.useState(foodData);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   console.log(dataFood);

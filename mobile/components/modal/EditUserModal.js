@@ -16,9 +16,9 @@ import colors from "../../assets/colors/colors";
 const WIDTH = Dimensions.get("window").width;
 
 function EditUserModal(props) {
-  const [name, setName] = useState();
-  const [phone, setPhone] = useState();
-  const [email, setEmail] = useState();
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
 
   const cancel = () => {
     props.changeModalVisible(false);

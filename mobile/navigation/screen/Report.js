@@ -9,10 +9,28 @@ import {
   ScrollView,
 } from "react-native";
 
+import SelectBox from "react-native-multi-selectbox";
+
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 
 const image = require("../../assets/image/bggreen.png");
+
+const K_OPTIONS = [
+  {
+    item: "week1",
+    id: 1,
+  },
+  {
+    item: "week2",
+    id: 2,
+  },
+  {
+    item: "week3",
+    id: 3,
+  },
+];
+
 const data = [
   {
     week: 1,
@@ -60,6 +78,9 @@ const SUM = t2 + t3 + t4 + t5 + t6 + t7 + cn;
 const AVERAGE = Math.round(SUM / 7);
 
 function Report({ navigation }) {
+  const [selectedTeam, setSelectedTeam] = React.useState({});
+  const today = new Date();
+  console.log(today);
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -80,7 +101,29 @@ function Report({ navigation }) {
                 >
                   XX T3 - XX T3
                 </Text>
-                <Text style={{ fontSize: 16, fontWeight: "400" }}>Tuần </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={{ fontSize: 16, fontWeight: "400" }}>Tuần </Text>
+
+                  <View>
+                    <SelectBox
+                      containerStyle={{
+                        marginTop: -25,
+                        padding: 10,
+                        borderRadius: 16,
+                        borderWidth: 1.5,
+                        borderColor: colors.gray,
+                      }}
+                      labelStyle={{ fontSize: 13 }}
+                      selectedItemStyle={{ fontSize: 13 }}
+                      optionsLabelStyle={{ fontSize: 13 }}
+                      options={K_OPTIONS}
+                      value={selectedTeam}
+                      label=""
+                      onChange={(val) => setSelectedTeam(val)}
+                      hideInputFilter={true}
+                    />
+                  </View>
+                </View>
               </View>
               <View style={styles.headerRight}>
                 <Text

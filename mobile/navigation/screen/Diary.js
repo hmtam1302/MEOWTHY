@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   circle: {
     flex: 1,
-    borderRadius: 100,
+    borderRadius: 40,
     borderWidth: 10,
     borderColor: "#70CCB8",
   },
