@@ -127,10 +127,14 @@ require("dotenv").config();
  *        phone:
  *          type: string
  *          description: User mobile phone
+ *        avatar:
+ *          type: string
+ *          description: User avatar
  *      example:
  *        username: username
  *        email: user@email.com
  *        phone: 0123456789
+ *        avatar: base64string
  */
 
 /**
