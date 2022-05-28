@@ -8,18 +8,35 @@ import {
   TouchableOpacity,
   ScrollView,
   TextInput,
+  AsyncStorage,
 } from "react-native";
 
+import axios from "axios";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "../../assets/colors/colors";
 import RedButton from "../../components/button/redButton";
 import BlueButton from "../../components/button/blueButton";
+import _retrieveData from "../../assets/data/user";
 
 const image = require("../../assets/image/bgyl.png");
+const URL = "http://10.0.2.2:3000/";
 
 function AboutCat({ props, navigation }) {
   const [value, onChangeText] = React.useState();
 
+  const getListCat = async () => {
+    try {
+      const response = await axios.get(
+        `${URL}cat/list-cat/628281f1ff6a9028ffea8329`
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log("error:", error, "liscat");
+      alert(error, "liscat");
+    }
+  };
+  getListCat();
+  const data = _retrieveData("userId");
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView

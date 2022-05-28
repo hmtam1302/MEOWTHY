@@ -7,10 +7,13 @@ import {
   ImageBackground,
   FlatList,
 } from "react-native";
+import axios from "axios";
 
 import colors from "../../assets/colors/colors";
 import itemNotify from "../../components/notify/itemNotify";
 import notificationData from "../../assets/data/notificationData";
+import { AsyncStorage } from "react-native";
+// import AsyncStorage from "@react-native-community/async-storage";
 
 const image = require("../../assets/image/bgyl.png");
 

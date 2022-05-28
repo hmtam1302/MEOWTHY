@@ -19,39 +19,48 @@ import EditUserModal from "../../components/modal/EditUserModal.js";
 import SelectBox from "react-native-multi-selectbox";
 import axios from "axios";
 
+import { AsyncStorage } from "react-native";
+
 const image = require("../../assets/image/bgpurple.png");
 
-const K_OPTIONS = [
-  {
-    item: "black cat",
-    id: 1,
-  },
-  {
-    item: "pink cat",
-    id: 2,
-  },
-  {
-    item: "mad cat",
-    id: 3,
-  },
-];
 const username = "username";
 const URL = "http://10.0.2.2:3000/";
 
 function User({ navigation }) {
   const [dataUser, setDataUser] = React.useState(...userData);
+  const [options, setOptions] = React.useState([]);
+
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState({});
 
   const getDataUser = async () => {
     try {
-      const res = await axios.get(`${URL}user/${username}`);
-      setDataUser(res.data.data);
+      const resDataUser = await axios
+        .get(`${URL}user/${username}`)
+        .then((res) => {
+          setDataUser(res.data.data);
+        });
+      saveArticle("userId", dataUser._id);
     } catch (error) {
       console.log("error:", error);
       alert(error);
     }
   };
+
+  // const getListCat = async () => {
+  //   try {
+  //     console.log(dataUser._id);
+  //     const resListCat = await axios
+  //       .get(`${URL}cat/list-cat/${dataUser._id}`)
+  //       .then((response) => {
+  //         setOptions(response.data);
+  //         console.log(response.data.catName);
+  //         console.log(options.catName);
+  //       });
+  //   } catch (error) {
+  //     console.log("error:", error, "list cat");
+  //   }
+  // };
 
   const updateDataUser = async (name, phone, email) => {
     try {
@@ -70,6 +79,7 @@ function User({ navigation }) {
 
   React.useEffect(() => {
     getDataUser();
+    // getListCat();
   }, []);
 
   const changeModalVisible = (bool) => {
@@ -79,6 +89,14 @@ function User({ navigation }) {
   const updateUser = (name, phone, email) => {
     updateDataUser(name, phone, email);
     setDataUser({ username: name, phone: phone, email: email });
+  };
+
+  const saveArticle = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   return (
@@ -161,7 +179,7 @@ function User({ navigation }) {
                     labelStyle={{ fontSize: 13 }}
                     selectedItemStyle={{ fontSize: 13 }}
                     optionsLabelStyle={{ fontSize: 13 }}
-                    options={K_OPTIONS}
+                    options={options}
                     value={selectedTeam}
                     label=""
                     onChange={(val) => setSelectedTeam(val)}
