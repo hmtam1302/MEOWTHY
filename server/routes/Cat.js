@@ -271,6 +271,61 @@ router.get('/list-cat/:userId', async (req, res) => {
 
 /**
  * @swagger
+ * /cat/{catId}:
+ *  get:
+ *    summary: Get cat with id
+ *    tags: [Cat]
+ *    parameters:
+ *      - in: path
+ *        name: catId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: CatId
+ *    responses:
+ *      '200':
+ *        description: Successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  $ref: '#/components/schemas/Cat'
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+router.get('/:catId', async (req, res) => {
+  try {
+    const { catId } = req.params;
+    const cat = await Cat.findById(catId);
+    if (cat) {
+      const weight = await Weight.find({ catId: cat._id }).sort({ date: -1 });
+      cat._doc.weight = weight;
+      const goal = await Goal.find({ catId: cat._id }).sort({ date: -1 });
+      cat._doc.goal = goal;
+
+      return res.status(200).json({ data: cat });
+    } else {
+      return res.status(500).json({ message: "Cannot found cat with given id" })
+    }
+  } catch (err) {
+    return res.status(500).json({ message: JSON.stringify(err) });
+  }
+})
+
+
+/**
+ * @swagger
  * /cat/add-cat/{userId}:
  *  post:
  *    summary: Add a new cat to user id
