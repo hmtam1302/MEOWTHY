@@ -47,6 +47,8 @@ require("dotenv").config();
  *          items:
  *            $ref: '#/components/schemas/CatGoal' 
  *      example:
+ *      {
+ *        _id: diary123456789,
  *        catId: catId,
  *        date: "2022-05-16T16:55:13.254Z",
  *        food_calories: 250,
@@ -65,6 +67,7 @@ require("dotenv").config();
  *            catGoal: 1,    
  *            date: "2022-05-16T16:55:13.254Z",  
  *        }]
+ *        }
  */
 
 
@@ -115,12 +118,14 @@ require("dotenv").config();
  *          type: string
  *          description: Written diary record by user
  *      example:
- *        catId: cat12324
- *        date: "2022-05-16T16:55:13.254Z"
- *        food_calories: 0
- *        water_amount: 0
- *        exercise: ""
+ *      {
+ *        catId: cat12324,
+ *        date: "2022-05-16T16:55:13.254Z",
+ *        food_calories: 0,
+ *        water_amount: 0,
+ *        exercise: "",
  *        about: ""
+ *       }
  */
 
 /**
@@ -148,10 +153,12 @@ require("dotenv").config();
  *          type: number
  *          description: Food calories
  *      example:
- *        diaryId: diary123456789
- *        name: "Cơm"
- *        amount: 100
+ *      {
+ *        diaryId: diary123456789,
+ *        name: "Cơm",
+ *        amount: 100,
  *        calories: 130
+ *      }
  */
 
 /**
