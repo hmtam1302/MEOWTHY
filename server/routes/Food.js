@@ -25,7 +25,7 @@ require("dotenv").config();
  *          description: default unit g
  *        calories: 
  *          type: number
- *          description: Calories per amount, kcal
+ *          description: Calories per amount kcal
  *      example:
  *        name: "cơm",
  *        amount: 10,
