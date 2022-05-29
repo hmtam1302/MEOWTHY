@@ -20,6 +20,9 @@ require("dotenv").config();
  *        - catID
  *        - date
  *      properties:
+ *        _id:
+ *          type: string
+ *          description: CatWeight Id
  *        catId:
  *          type: string
  *          description: Id of the chosen cat
@@ -47,26 +50,26 @@ require("dotenv").config();
  *          items:
  *            $ref: '#/components/schemas/CatGoal' 
  *      example:
- *      {
- *        _id: diary123456789,
- *        catId: catId,
- *        date: "2022-05-16T16:55:13.254Z",
- *        food_calories: 250,
- *        water_amount: 200,
- *        exercise: "",
- *        about: "",
- *        weight: [{
- *            _id: weight123456,         
- *            catId: abc123456789,
- *            catWeight: 1,    
- *            date: "2022-05-16T16:55:13.254Z",
- *        }],
- *        goal: [{
- *            _id: goal123456,        
- *            catId: abc123456789,
- *            catGoal: 1,    
- *            date: "2022-05-16T16:55:13.254Z",  
- *        }]
+ *        {
+ *          _id: diary123456789,
+ *          catId: catId,
+ *          date: "2022-05-16T16:55:13.254Z",
+ *          food_calories: 250,
+ *          water_amount: 200,
+ *          exercise: "",
+ *          about: "",
+ *          weight: [{
+ *              _id: weight123456,         
+ *              catId: abc123456789,
+ *              catWeight: 1,    
+ *              date: "2022-05-16T16:55:13.254Z",
+ *          }],
+ *          goal: [{
+ *              _id: goal123456,        
+ *              catId: abc123456789,
+ *              catGoal: 1,    
+ *              date: "2022-05-16T16:55:13.254Z",  
+ *          }]
  *        }
  */
 
@@ -118,14 +121,12 @@ require("dotenv").config();
  *          type: string
  *          description: Written diary record by user
  *      example:
- *      {
- *        catId: cat12324,
- *        date: "2022-05-16T16:55:13.254Z",
- *        food_calories: 0,
- *        water_amount: 0,
- *        exercise: "",
+ *        catId: cat12324
+ *        date: "2022-05-16T16:55:13.254Z"
+ *        food_calories: 0
+ *        water_amount: 0
+ *        exercise: ""
  *        about: ""
- *       }
  */
 
 /**
@@ -134,12 +135,10 @@ require("dotenv").config();
  *  schemas:
  *    DiaryFood:
  *      type: object
- *      required:
- *        - diaryID
- *        - name
- *        - amount
- *        - calories
  *      properties:
+ *        _id:
+ *          type: string
+ *          description: Fed food Id
  *        diaryId:
  *          type: string
  *          description: Diary Id
@@ -153,12 +152,13 @@ require("dotenv").config();
  *          type: number
  *          description: Food calories
  *      example:
- *      {
- *        diaryId: diary123456789,
- *        name: "Cơm",
- *        amount: 100,
- *        calories: 130
- *      }
+ *        {
+ *          _id: ff123456789,
+ *          diaryId: diary123456789,
+ *          name: "Cơm",
+ *          amount: 100,
+ *          calories: 130
+ *        }
  */
 
 /**
