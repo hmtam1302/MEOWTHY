@@ -16,10 +16,10 @@ import colors from "../../assets/colors/colors";
 const WIDTH = Dimensions.get("window").width;
 
 function EditUserModal(props) {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [email, setEmail] = useState("");
-
+  const dataUser = props.dataUser;
+  const [phone, setPhone] = useState(dataUser.phone);
+  const [email, setEmail] = useState(dataUser.email);
+  console.log(props.dataUser.username);
   const cancel = () => {
     props.changeModalVisible(false);
   };
@@ -36,15 +36,15 @@ function EditUserModal(props) {
         <Text style={styles.lable}>Tên đăng Nhập</Text>
         <View style={styles.inputWrapper}>
           <Feather name="user" color={colors.yellow} size={16} />
-          <TextInput
-            style={{ paddingLeft: 10, flex: 1 }}
-            onChangeText={(text) => setName(text)}
-          />
+          {/* <TextInput style={{ paddingLeft: 10, flex: 1 }} value={username} />
+           */}
+          <Text style={{ paddingLeft: 10, flex: 1 }}>{dataUser.username}</Text>
         </View>
         <Text style={styles.lable}>Số điện thoại</Text>
         <View style={styles.inputWrapper}>
           <Feather name="phone" color={colors.yellow} size={16} />
           <TextInput
+            value={phone}
             style={{ paddingLeft: 10, flex: 1 }}
             onChangeText={(text) => setPhone(text)}
           />
@@ -53,13 +53,17 @@ function EditUserModal(props) {
         <View style={styles.inputWrapper}>
           <Feather name="mail" color={colors.yellow} size={16} />
           <TextInput
+            value={email}
             style={{ paddingLeft: 10, flex: 1 }}
             onChangeText={(text) => setEmail(text)}
           />
         </View>
         <View style={styles.buttonWrapper}>
           <RedButton title="Hủy" onPress={() => cancel()} />
-          <BlueButton title="Lưu" onPress={() => save(name, phone, email)} />
+          <BlueButton
+            title="Lưu"
+            onPress={() => save(dataUser.username, phone, email)}
+          />
         </View>
       </View>
     </View>

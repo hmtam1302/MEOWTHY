@@ -29,11 +29,12 @@ function Diary({ navigation }) {
     let tempDate = new Date(currentDate);
     let fDate =
       tempDate.getDate() +
-      "/" +
+      "-" +
       (tempDate.getMonth() + 1) +
-      "/" +
+      "-" +
       tempDate.getFullYear();
     setText(fDate);
+    console.log(currentDate);
   };
 
   return (

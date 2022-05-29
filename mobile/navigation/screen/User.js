@@ -25,7 +25,7 @@ import { AsyncStorage } from "react-native";
 
 const image = require("../../assets/image/bgpurple.png");
 
-const username = "username";
+const username = "synguyen";
 const URL = "http://10.0.2.2:3000/";
 
 // ----------------
@@ -42,7 +42,7 @@ function User({ navigation }) {
       mediaType: "photo",
       includeBase64: true,
     });
-    console.log("symap:", imageFromLib.assets[0].base64);
+    console.log(imageFromLib.assets[0].base64);
   };
 
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -164,6 +164,7 @@ function User({ navigation }) {
                 <EditUserModal
                   changeModalVisible={changeModalVisible}
                   updateUser={updateUser}
+                  dataUser={dataUser}
                 />
               </Modal>
             </View>

@@ -21,7 +21,8 @@ import * as ImagePicker from "expo-image-picker";
 
 const image = require("../../assets/image/bgyl.png");
 
-function Notification() {
+function Notification(navigation) {
+  const a = "symapqua";
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <SafeAreaView>
@@ -29,8 +30,7 @@ function Notification() {
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={() => {
-              // openImagePickerAsync();
-              chooseFile();
+              navigation.navigate("Tôi", a);
             }}
           >
             <Text style={styles.titleTitle}>Thông báo</Text>

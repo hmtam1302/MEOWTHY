@@ -24,7 +24,6 @@ const URL = "http://10.0.2.2:3000/";
 function AboutCat({ props, navigation }) {
   const [value, onChangeText] = React.useState();
 
-  getListCat();
   const data = _retrieveData("userId");
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
