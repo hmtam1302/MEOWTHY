@@ -273,7 +273,7 @@ require("dotenv").config();
  * /diary/add-diary/{catId}:
  *  post:
  *    summary: Add a new diary page of cat id
- *    tags: [Cat]
+ *    tags: [Diary]
  *    parameters:
  *      - in: path
  *        name: catId
