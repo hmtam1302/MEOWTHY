@@ -11,7 +11,7 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
- *    CatWeight:
+ *    CatWeightSet:
  *      type: object
  *      properties:
  *        _id:
@@ -37,7 +37,7 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
- *    CatGoal:
+ *    CatGoalSet:
  *      type: object
  *      properties:
  *        _id:
@@ -79,7 +79,7 @@ require("dotenv").config();
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/CatGoal'
+ *            $ref: '#/components/schemas/CatGoalSet'
  *    responses:
  *      '200':
  *        description: Successful response
@@ -143,7 +143,7 @@ router.post("/set-goal/:catId", async (req, res) => {
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/CatWeight'
+ *            $ref: '#/components/schemas/CatWeightSet'
  *    responses:
  *      '200':
  *        description: Successful response
