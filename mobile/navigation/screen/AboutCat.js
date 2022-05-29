@@ -24,17 +24,6 @@ const URL = "http://10.0.2.2:3000/";
 function AboutCat({ props, navigation }) {
   const [value, onChangeText] = React.useState();
 
-  const getListCat = async () => {
-    try {
-      const response = await axios.get(
-        `${URL}cat/list-cat/628281f1ff6a9028ffea8329`
-      );
-      console.log(response.data);
-    } catch (error) {
-      console.log("error:", error, "liscat");
-      alert(error, "liscat");
-    }
-  };
   getListCat();
   const data = _retrieveData("userId");
   return (

@@ -11,6 +11,8 @@ import {
   Image,
 } from "react-native";
 
+import { launchImageLibrary } from "react-native-image-picker";
+
 import colors from "../../assets/colors/colors";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import userData from "../../assets/data/userData";
@@ -26,9 +28,22 @@ const image = require("../../assets/image/bgpurple.png");
 const username = "username";
 const URL = "http://10.0.2.2:3000/";
 
+// ----------------
+
 function User({ navigation }) {
   const [dataUser, setDataUser] = React.useState(...userData);
-  const [options, setOptions] = React.useState([]);
+  // const [options, setOptions] = React.useState([]);
+
+  const openGallary = async () => {
+    const imageFromLib = await launchImageLibrary({
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 1,
+      mediaType: "photo",
+      includeBase64: true,
+    });
+    console.log("symap:", imageFromLib.assets[0].base64);
+  };
 
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState({});
@@ -77,11 +92,6 @@ function User({ navigation }) {
     }
   };
 
-  React.useEffect(() => {
-    getDataUser();
-    // getListCat();
-  }, []);
-
   const changeModalVisible = (bool) => {
     setIsModalVisible(bool);
   };
@@ -99,6 +109,10 @@ function User({ navigation }) {
     }
   };
 
+  React.useEffect(() => {
+    getDataUser();
+    // getListCat();
+  }, []);
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -110,12 +124,14 @@ function User({ navigation }) {
           <View style={styles.wrapTopInfo}>
             <View style={styles.rowSp}>
               <View style={styles.infoWrap}>
-                <Image
-                  style={styles.avatar}
-                  source={
-                    dataUser.image || require("../../assets/image/cat.png")
-                  }
-                />
+                <TouchableOpacity onPress={() => openGallary()}>
+                  <Image
+                    style={styles.avatar}
+                    source={
+                      dataUser.image || require("../../assets/image/cat.png")
+                    }
+                  />
+                </TouchableOpacity>
                 <View style={styles.info}>
                   <Text style={styles.infoUserName}>{dataUser.username}</Text>
                   <Text style={styles.infoPhone}>{dataUser.phone}</Text>
@@ -179,7 +195,7 @@ function User({ navigation }) {
                     labelStyle={{ fontSize: 13 }}
                     selectedItemStyle={{ fontSize: 13 }}
                     optionsLabelStyle={{ fontSize: 13 }}
-                    options={options}
+                    // options={options}
                     value={selectedTeam}
                     label=""
                     onChange={(val) => setSelectedTeam(val)}

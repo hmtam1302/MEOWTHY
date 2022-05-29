@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SafeAreaView,
   ImageBackground,
+  TouchableOpacity,
   FlatList,
 } from "react-native";
 import axios from "axios";
@@ -13,6 +14,9 @@ import colors from "../../assets/colors/colors";
 import itemNotify from "../../components/notify/itemNotify";
 import notificationData from "../../assets/data/notificationData";
 import { AsyncStorage } from "react-native";
+import { launchImageLibrary } from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
+
 // import AsyncStorage from "@react-native-community/async-storage";
 
 const image = require("../../assets/image/bgyl.png");
@@ -22,7 +26,15 @@ function Notification() {
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <SafeAreaView>
         <View style={styles.titleWrapper}>
-          <Text style={styles.titleTitle}>Thông báo</Text>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => {
+              // openImagePickerAsync();
+              chooseFile();
+            }}
+          >
+            <Text style={styles.titleTitle}>Thông báo</Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.itemWrap}>
           <FlatList
