@@ -42,6 +42,17 @@ app.use("/token", tokenRouter);
 const catRouter = require("./routes/Cat");
 app.use("/cat", catRouter);
 
+const diaryRouter = require("./routes/Diary");
+app.use("/diary", diaryRouter);
+
+const foodRouter = require("./routes/Food");
+app.use("/food", foodRouter);
+
+const setRouter = require("./routes/SetGoal");
+app.use("/cat", setRouter);
+
+
+
 //Connect to mongoose
 mongoose
   .connect(process.env.MONGO_URL, {
