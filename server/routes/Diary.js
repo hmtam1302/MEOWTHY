@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Diary = require("../models/Diary");
-const FedFood = require("../models/FetFood");
+const FedFood = require("../models/FedFood");
 const Cat = require('../models/Cat');
 const Weight = require('../models/Weight');
 const Goal = require('../models/Goal');
@@ -267,7 +267,7 @@ require("dotenv").config();
  router.get('/list-diary/:catId', async (req, res) => {
   try {
     const { catId } = req.params;
-    const listDiary = await Cat.find({ catId });
+    const listDiary = await Diary.find({ catId });
     return res.status(200).json({ data: listDiary });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
