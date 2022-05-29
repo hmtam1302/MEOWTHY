@@ -149,7 +149,7 @@ require("dotenv").config();
 //------------------------------------------------------
 
 
-router.get("/cat/:catId/diary", async (req, res) => {
+router.get("/list-diary/:catId", async (req, res) => {
   const { catId } = req.params;
   const response = await Cat.find({ catId });
   if (response.length === 0) {
@@ -176,13 +176,13 @@ router.get("/cat/:catId/diary", async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/diary/{date}:
+ * /diary/{diaryId}:
  *  get:
- *    summary: Get diary record at date
+ *    summary: Get diary record
  *    tags: [Diary]
  *    parameters:
  *      - in: path
- *        name: catId, date
+ *        name: diaryId
  *        schema:
  *          type: string
  *        required: true
@@ -210,15 +210,15 @@ router.get("/cat/:catId/diary", async (req, res) => {
  *
  */
 
-router.get('/cat/:catId/diary/:date', async (req, res) => {
+router.get('/diary/:diaryId', async (req, res) => {
   try {
-    const { cat_id, diary_date } = req.params;
-    const diary = await Diary.find({ cat_id, diary_date });
+    const { diaryId } = req.params;
+    const diary = await Diary.find({ diaryId });
     const data = await Promise(async () => {
-      const weight = await Weight.find({ catId: cat_id }).sort({ date: -1 });
+      const weight = await Weight.find({ catId: diary._doc.catId }).sort({ date: -1 });
       diary._doc.weight = weight;
 
-      const goal = await Goal.find({ catId: cat_id }).sort({ date: -1 });
+      const goal = await Goal.find({ catId: diary._doc.catId }).sort({ date: -1 });
       diary._doc.goal = goal;
       return diary;
     });
@@ -232,13 +232,13 @@ router.get('/cat/:catId/diary/:date', async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/diary/{date}/food:
+ * /diary/{diaryId}/list-food:
  *  get:
- *    summary: Get list cat of user id
+ *    summary: Get list food of diary id
  *    tags: [DiaryFood]
  *    parameters:
  *      - in: path
- *        name: catId, date
+ *        name: diaryId
  *        schema:
  *          type: string
  *        required: true
@@ -266,11 +266,10 @@ router.get('/cat/:catId/diary/:date', async (req, res) => {
  *
  */
 
-router.get('/cat/:catId/diary/:date/food', async (req, res) => {
+router.get('/diary/:diaryId/list-food', async (req, res) => {
   try {
-    const { cat_id, diary_date } = req.params;
-    const diary = await Diary.find({ catId : cat_id, date : diary_date });
-    const listFood = await FedFood.find({diaryId : diary._id})
+    const { diaryId } = req.params;
+    const listFood = await FedFood.find({diaryId : diaryId})
     return res.status(200).json({ data: listFood });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -280,13 +279,13 @@ router.get('/cat/:catId/diary/:date/food', async (req, res) => {
 
 /**
  * @swagger
- * /cat/:catId/diary/:date/food:
+ * /add-food/:diaryId:
  *  post:
  *    summary: Add food to diary record
  *    tags: [DiaryFood]
  *    parameters:
  *      - in: path
- *        name: catId, date
+ *        name: diaryId
  *        schema:
  *          type: string
  *        required: true
@@ -321,16 +320,16 @@ router.get('/cat/:catId/diary/:date/food', async (req, res) => {
  *
  */
 
-router.post("/cat/:catId/diary/:date/food", async (req, res) => {
-  const { catId, diary_date } = req.params
+router.post("/add-food/:diaryId", async (req, res) => {
+  const { diaryId } = req.params
   const { foodname, amount, calories } = req.body;
-  const diary = await Diary.find({ catId: catId, date : diary_date });
+  const diary = await Diary.find({ diaryId: diaryId });
   if (diary.length === 0) {
-    res.status(500).json({ message: "Diary at the date of catId not found" });
+    res.status(500).json({ message: "Diary not found" });
   } else {
     try {
       const dbFedFood = new FedFood({
-        diaryId: diary._id,
+        diaryId: diaryId,
         name: foodname,
         amount: amount,
         calories: calories,
@@ -346,7 +345,7 @@ router.post("/cat/:catId/diary/:date/food", async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/diary/{date}/food/{foodId}:
+ * /food/{foodId}:
  *  get:
  *    summary: Get food record
  *    tags: [DiaryFood]
@@ -450,7 +449,7 @@ router.post("/cat/:catId/diary/:date/food", async (req, res) => {
  *
  */
 
-router.get("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
+router.get("/food/:foodId", async (req, res) => {
   const response = await FedFood.find({ _id: req.params.foodId });
   if (response.length > 0)
     res.status(200).json({ data: response[0] });
@@ -458,14 +457,14 @@ router.get("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
 })
 
 
-router.put("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
-  const { catId, diary_date, foodId } = req.params
+router.put("/food/:foodId", async (req, res) => {
+  const { foodId } = req.params
   const { foodname, amount, calories } = req.body;
-  const diary = await Diary.find({ catId: catId, date : diary_date });
+  const fed_food = await FedFood.find({ _id: foodId });
+  const diary = await Diary.find({ diaryId: fed_food._doc.diaryId });
   if (diary.length === 0) {
     res.status(500).json({ message: "Diary at the date not found" });
   } else {
-      const fed_food = await FedFood.find({ _id: foodId })
       diary._doc.food_calories += calories - fed_food.calories;
       FedFood.findOneAndUpdate({ _id : foodId }, {name : foodname, amount : amount, calories : calories})
       .then(() => {
@@ -480,10 +479,10 @@ router.put("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
 });
 
 
-router.delete("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
-  const { catId, diary_date, foodId } = req.params
-  const diary = await Diary.find({ catId: catId, date : diary_date })
-  const response = await FedFood.find({ diaryId: diary._id });
+router.delete("/food/:foodId", async (req, res) => {
+  const { foodId } = req.params;
+  const response = await FedFood.find({ _id: foodId });
+  const diary = await Diary.find({ diaryId: response._doc.diaryId });
   if (response.length === 0) {
     res.status(500).json({ message: "Selected food not found" });
   } else {
@@ -503,7 +502,7 @@ router.delete("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/diary/{date}/change-water-amount:
+ * /diary/change-water-amount/{diaryId}:
  *  put:
  *    summary: Change water amount
  *    tags: [DiaryChangeWaterAmount]
@@ -537,12 +536,12 @@ router.delete("/cat/:catId/diary/:date/food/:foodId", async (req, res) => {
  *
  */
 
-router.put("/cat/:catId/diary/:date/change-water-amount", async (req, res) => {
-  const { catId, diary_date } = req.params
+router.put("/change-water-amount/:diaryId", async (req, res) => {
+  const { diaryId } = req.params;
   const { amount } = req.body;
-  const diary = await Diary.find({ catId: catId, date : diary_date });
+  const diary = await Diary.find({ diaryId: diaryId });
   if (diary.length === 0) {
-    res.status(500).json({ message: "Diary at the date not found" });
+    res.status(500).json({ message: "Diary not found" });
   } else {
     const data = await Promise(async () => {
       diary._doc.water_amount += amount;
@@ -555,7 +554,7 @@ router.put("/cat/:catId/diary/:date/change-water-amount", async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/diary/{date}/exercise:
+ * /diary/exercise/{diaryId}:
  *  put:
  *    summary: Update exercise
  *    tags: [DiaryExercise]
@@ -589,17 +588,17 @@ router.put("/cat/:catId/diary/:date/change-water-amount", async (req, res) => {
  *
  */
 
-router.put("/cat/:catId/diary/:date/exercise", async (req, res) => {
-  const { catId , diary_date } = req.params
+router.put("/exercise/:diaryId", async (req, res) => {
+  const { diaryId } = req.params
   const { exercise } = req.body;
-  const response = await Diary.find({ catId: catId , date: diary_date });
+  const response = await Diary.find({ diaryId: diaryId });
   //Check diary date
   if (response.length === 0) {
     res.status(500).json({ message: "Diary not found!" });
   } else {
     try {
         await Diary.findOneAndUpdate(
-          { catId , diary_date },
+          { diaryId },
           { exercise: exercise }
         );
         res.status(200).json({ message: "Save About success!" });
@@ -612,7 +611,7 @@ router.put("/cat/:catId/diary/:date/exercise", async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/diary/{date}/about:
+ * /diary/about/{diaryId}:
  *  put:
  *    summary: Update about
  *    tags: [DiaryAbout]
@@ -646,17 +645,17 @@ router.put("/cat/:catId/diary/:date/exercise", async (req, res) => {
  *
  */
 
-router.put("/cat/:catId/diary/:date/about", async (req, res) => {
-  const { catId , diary_date } = req.params
+router.put("/about/:diaryId", async (req, res) => {
+  const { diaryId } = req.params
   const { about } = req.body;
-  const response = await Diary.find({ catId: catId , date: diary_date });
+  const response = await Diary.find({ diaryId: diaryId });
   //Check diary date
   if (response.length === 0) {
     res.status(500).json({ message: "Diary not found!" });
   } else {
     try {
         await Diary.findOneAndUpdate(
-          { catId , diary_date },
+          { diaryId },
           { about: about }
         );
         res.status(200).json({ message: "Save About success!" });

@@ -63,7 +63,7 @@ require("dotenv").config();
 
 /**
  * @swagger
- * /cat/{catId}/set-goal:
+ * /cat/set-goal/{catId}:
  *  post:
  *    summary: Add a new goal to cat id
  *    tags: [CatGoal]
@@ -104,7 +104,7 @@ require("dotenv").config();
  *
  */
 
-router.post("/cat/:catId/set-goal", async (req, res) => {
+router.post("/set-goal/:catId", async (req, res) => {
   const { catId } = req.params;
   const { goal } = req.body;
   if (response.length === 0) {
@@ -127,7 +127,7 @@ router.post("/cat/:catId/set-goal", async (req, res) => {
 
 /**
  * @swagger
- * /cat/{catId}/set-weight:
+ * /cat/set-weight/{catId}:
  *  post:
  *    summary: Add a new weight to cat id
  *    tags: [CatWeight]
@@ -168,7 +168,7 @@ router.post("/cat/:catId/set-goal", async (req, res) => {
  *
  */
 
-router.post("/cat/:catId/set-weight", async (req, res) => {
+router.post("/cat/set-weight/:catId", async (req, res) => {
     const { catId } = req.params;
     const { weight } = req.body;
     if (response.length === 0) {
