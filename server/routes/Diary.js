@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const Diary = require("../models/Diary");
-const Food = require("../models/Food");
 const FedFood = require("../models/FetFood");
 const Cat = require('../models/Cat');
 const Weight = require('../models/Weight');
@@ -49,7 +48,7 @@ require("dotenv").config();
  *            $ref: '#/components/schemas/CatGoal' 
  *      example:
  *        catId: catId,
- *        date: "2022-04-01",
+ *        date: "2022-05-16T16:55:13.254Z",
  *        food_calories: 250,
  *        water_amount: 200,
  *        exercise: "",
@@ -66,6 +65,62 @@ require("dotenv").config();
  *            catGoal: 1,    
  *            date: "2022-05-16T16:55:13.254Z",  
  *        }]
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    ListDiary:
+ *      type: array
+ *      items:
+ *         $ref: '#/components/schemas/Diary'
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    ListDiary:
+ *      type: array
+ *      items:
+ *         $ref: '#/components/schemas/Diary'
+ */
+
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    DiaryAdd:
+ *      type: object
+ *      properties:
+ *        catId:
+ *          type: string
+ *          description: Cat Id
+ *        date:
+ *          type: Date
+ *          description: the date diary opened
+ *        food_calories:
+ *          type: number
+ *          description: Total calories of food the cat consumed at date
+ *        water_amount:
+ *          type: number
+ *          description: Total amount of water the cat consumed at date
+ *        exercise:
+ *          type: string
+ *          description: Written exercise record by user
+ *        about:
+ *          type: string
+ *          description: Written diary record by user
+ *      example:
+ *        catId: cat12324
+ *        date: "2022-05-16T16:55:13.254Z"
+ *        food_calories: 0
+ *        water_amount: 0
+ *        exercise: ""
+ *        about: ""
  */
 
 /**
@@ -103,6 +158,24 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
+ *    FedFoodUpdate:
+ *      type: object
+ *      properties:
+ *        amount:
+ *          type: number
+ *          description: amount of fed food
+ *        calories:
+ *          type: number
+ *          description: calories of fed food
+ *      example:
+ *        amount: 100
+ *        calories: 130
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
  *    DiaryChangeWaterAmount:
  *      type: object
  *      required:
@@ -119,7 +192,7 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
- *    DiaryExercise:
+ *    DiaryExerciseUpdate:
  *      type: object
  *      required:
  *        - exercise
@@ -135,7 +208,7 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
- *    DiaryAbout:
+ *    DiaryAboutUpdate:
  *      type: object
  *      required:
  *        - about
@@ -149,7 +222,96 @@ require("dotenv").config();
 //------------------------------------------------------
 
 
-router.get("/list-diary/:catId", async (req, res) => {
+/**
+ * @swagger
+ * /diary/list-diary/{catId}:
+ *  get:
+ *    summary: Get list diary of cat id
+ *    tags: [Diary]
+ *    parameters:
+ *      - in: path
+ *        name: catId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: catId
+ *    responses:
+ *      '200':
+ *        description: Successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                data:
+ *                  $ref: '#/components/schemas/ListDiary'
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+ router.get('/list-diary/:catId', async (req, res) => {
+  try {
+    const { catId } = req.params;
+    const listDiary = await Cat.find({ catId });
+    return res.status(200).json({ data: listDiary });
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
+
+
+/**
+ * @swagger
+ * /diary/add-diary/{catId}:
+ *  post:
+ *    summary: Add a new diary page of cat id
+ *    tags: [Cat]
+ *    parameters:
+ *      - in: path
+ *        name: catId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: catId
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json: 
+ *          schema:
+ *            $ref: '#/components/schemas/DiaryAdd'
+ *    responses:
+ *      '200':
+ *        description: Successful response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Success message
+ *      '500':
+ *        description: Error response
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *                  description: Error message
+ *
+ */
+
+router.post("/add-diary/:catId", async (req, res) => {
   const { catId } = req.params;
   const response = await Cat.find({ catId });
   if (response.length === 0) {
@@ -178,7 +340,7 @@ router.get("/list-diary/:catId", async (req, res) => {
  * @swagger
  * /diary/{diaryId}:
  *  get:
- *    summary: Get diary record
+ *    summary: Get a diary page
  *    tags: [Diary]
  *    parameters:
  *      - in: path
@@ -269,7 +431,7 @@ router.get('/diary/:diaryId', async (req, res) => {
 router.get('/diary/:diaryId/list-food', async (req, res) => {
   try {
     const { diaryId } = req.params;
-    const listFood = await FedFood.find({diaryId : diaryId})
+    const listFood = await FedFood.find({diaryId : diaryId })
     return res.status(200).json({ data: listFood });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -279,9 +441,9 @@ router.get('/diary/:diaryId/list-food', async (req, res) => {
 
 /**
  * @swagger
- * /add-food/:diaryId:
+ * /add-food/{diaryId}:
  *  post:
- *    summary: Add food to diary record
+ *    summary: Add food to diary page
  *    tags: [DiaryFood]
  *    parameters:
  *      - in: path
@@ -295,7 +457,7 @@ router.get('/diary/:diaryId/list-food', async (req, res) => {
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/DiaryFood'
+ *            $ref: '#/components/schemas/FedFoodAdd'
  *    responses:
  *      '200':
  *        description: Successful response
@@ -324,59 +486,25 @@ router.post("/add-food/:diaryId", async (req, res) => {
   const { diaryId } = req.params
   const { foodname, amount, calories } = req.body;
   const diary = await Diary.find({ diaryId: diaryId });
-  if (diary.length === 0) {
-    res.status(500).json({ message: "Diary not found" });
-  } else {
-    try {
-      const dbFedFood = new FedFood({
-        diaryId: diaryId,
-        name: foodname,
-        amount: amount,
-        calories: calories,
-      });
+  try {
+    const dbFedFood = new FedFood({
+      diaryId: diaryId,
+      name: foodname,
+      amount: amount,
+      calories: calories,
+    });
 
-      // Save fed food to db
-      await dbFedFood.save();
-      diary._doc.food_calories += calories;
-    } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
-  }
+    // Save fed food to db
+    await dbFedFood.save();
+    diary._doc.food_calories += calories;
+    res.status(200).json({ message: "Add fed food successfully!" });
+  } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
 })
 
 
 /**
  * @swagger
  * /food/{foodId}:
- *  get:
- *    summary: Get food record
- *    tags: [DiaryFood]
- *    parameters:
- *      - in: path
- *        name: foodId
- *        schema:
- *          type: string
- *        required: true
- *        description: Fed food Id
- *    responses:
- *      '200':
- *        description: Successful response
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                data:
- *                  $ref: '#/components/schemas/DiaryFood'
- *      '500':
- *        description: Error response
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                message:
- *                  type: string
- *                  description: Error message
- * 
  *  put:
  *    summary: Change food in record
  *    tags: [DiaryFood]
@@ -392,7 +520,7 @@ router.post("/add-food/:diaryId", async (req, res) => {
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/DiaryFood'
+ *            $ref: '#/components/schemas/FedFoodUpdate'
  *    responses:
  *      '200':
  *        description: Successful response
@@ -449,24 +577,16 @@ router.post("/add-food/:diaryId", async (req, res) => {
  *
  */
 
-router.get("/food/:foodId", async (req, res) => {
-  const response = await FedFood.find({ _id: req.params.foodId });
-  if (response.length > 0)
-    res.status(200).json({ data: response[0] });
-  else res.status(500).json({ error: 'Not found selected food' })
-})
-
-
 router.put("/food/:foodId", async (req, res) => {
   const { foodId } = req.params
-  const { foodname, amount, calories } = req.body;
+  const { amount, calories } = req.body;
   const fed_food = await FedFood.find({ _id: foodId });
   const diary = await Diary.find({ diaryId: fed_food._doc.diaryId });
   if (diary.length === 0) {
     res.status(500).json({ message: "Diary at the date not found" });
   } else {
-      diary._doc.food_calories += calories - fed_food.calories;
-      FedFood.findOneAndUpdate({ _id : foodId }, {name : foodname, amount : amount, calories : calories})
+      diary._doc.food_calories += calories - fed_food._doc.calories;
+      FedFood.findOneAndUpdate({ _id : foodId }, {amount : amount, calories : calories})
       .then(() => {
         res.status(200).json({ message: "Update successful!" })
       })
@@ -563,7 +683,7 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/DiaryExercise'
+ *            $ref: '#/components/schemas/DiaryExerciseUpdate'
  *    responses:
  *      '200':
  *        description: Success response
@@ -620,7 +740,7 @@ router.put("/exercise/:diaryId", async (req, res) => {
  *      content:
  *        application/json: 
  *          schema:
- *            $ref: '#/components/schemas/DiaryAbout'
+ *            $ref: '#/components/schemas/DiaryAboutUpdate'
  *    responses:
  *      '200':
  *        description: Success response
