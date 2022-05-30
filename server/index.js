@@ -29,6 +29,11 @@ const swaggerOptions = {
   },
   apis: ['routes/*.js']
 };
+
+app.get('/', (req, res) => {
+  return res.status(200).json({ message: "Welcome to MEOWTHY PROJECT API" })
+});
+
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
