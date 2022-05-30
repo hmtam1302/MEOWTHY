@@ -27,10 +27,12 @@ require("dotenv").config();
  *          type: date
  *          description: Cat weight create date
  *      example:
- *        _id: weight123456789
- *        catId: cat123456789
- *        catWeight: 1.5
- *        date: "2022-05-16T16:55:13.254Z"
+ *        {
+ *          _id: weight123456789,
+ *          catId: cat123456789,
+ *          catWeight: 1.5,
+ *          date: "2022-05-16T16:55:13.254Z"
+ *        }
  */
 
 /**
@@ -53,10 +55,12 @@ require("dotenv").config();
  *          type: date
  *          description: Cat goal create date
  *      example:
- *        _id: weight123456789
- *        catId: cat123456789
- *        catGoal: 1.5
- *        date: "2022-05-16T16:55:13.254Z"
+ *        {
+ *          _id: weight123456789,
+ *          catId: cat123456789,
+ *          catGoal: 1.5,
+ *          date: "2022-05-16T16:55:13.254Z"
+ *        }
  */
 //------------------------------------------------------
 
@@ -168,7 +172,7 @@ router.post("/set-goal/:catId", async (req, res) => {
  *
  */
 
-router.post("/cat/set-weight/:catId", async (req, res) => {
+router.post("/set-weight/:catId", async (req, res) => {
     const { catId } = req.params;
     const { weight } = req.body;
     if (response.length === 0) {
