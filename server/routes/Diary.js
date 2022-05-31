@@ -162,6 +162,28 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
+ *    FedFoodAdd:
+ *      type: object
+ *      properties:
+ *        name:
+ *          type: string
+ *          description: Food name
+ *        amount:
+ *          type: number
+ *          description: amount of fed food
+ *        calories:
+ *          type: number
+ *          description: calories of fed food
+ *      example:
+ *        name: "Cơm"
+ *        amount: 100
+ *        calories: 130
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
  *    FedFoodUpdate:
  *      type: object
  *      properties:
@@ -378,23 +400,20 @@ router.post("/add-diary/:catId", async (req, res) => {
  *
  */
 
-router.get("/diary/:diaryId", async (req, res) => {
+router.get("/:diaryId", async (req, res) => {
   try {
     const { diaryId } = req.params;
-    const diary = await Diary.find({ diaryId });
-    const data = await Promise(async () => {
-      const weight = await Weight.find({ catId: diary._doc.catId }).sort({
-        date: -1,
-      });
+    const diary = await Diary.findById( diaryId );
+    if(diary){
+      const weight = await Weight.find({ catId: diary._doc.catId }).sort({ date: -1 });
       diary._doc.weight = weight;
 
-      const goal = await Goal.find({ catId: diary._doc.catId }).sort({
-        date: -1,
-      });
+      const goal = await Goal.find({ catId: diary._doc.catId }).sort({ date: -1 });
       diary._doc.goal = goal;
-      return diary;
-    });
-    return res.status(200).json({ data: data });
+      return res.status(200).json({ data: diary });
+    } else {
+      return res.status(500).json({ message: "Cannot found diary with given id" })
+    }
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }
@@ -436,7 +455,7 @@ router.get("/diary/:diaryId", async (req, res) => {
  *
  */
 
-router.get("/diary/:diaryId/list-food", async (req, res) => {
+router.get("/:diaryId/list-food", async (req, res) => {
   try {
     const { diaryId } = req.params;
     const listFood = await FedFood.find({ diaryId: diaryId });
@@ -448,7 +467,7 @@ router.get("/diary/:diaryId/list-food", async (req, res) => {
 
 /**
  * @swagger
- * /add-food/{diaryId}:
+ * /diary/add-food/{diaryId}:
  *  post:
  *    summary: Add food to diary page
  *    tags: [DiaryFood]
@@ -503,7 +522,7 @@ router.post("/add-food/:diaryId", async (req, res) => {
 
     // Save fed food to db
     await dbFedFood.save();
-    diary._doc.food_calories += calories;
+    Diary.findByIdAndUpdate( diaryId, { $inc: { food_calories: calories } });
     res.status(200).json({ message: "Add fed food successfully!" });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -516,6 +535,13 @@ router.post("/add-food/:diaryId", async (req, res) => {
  *  put:
  *    summary: Change water amount
  *    tags: [DiaryChangeWaterAmount]
+ *    parameters:
+ *      - in: path
+ *        name: diaryId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Identify Diary
  *    requestBody:
  *      required: true
  *      content:
@@ -550,15 +576,13 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
   const { amount } = req.body;
   const diary = await Diary.find({ diaryId: diaryId });
-  if (diary.length === 0) {
-    res.status(500).json({ message: "Diary not found" });
-  } else {
-    const data = await Promise(async () => {
-      diary._doc.water_amount += amount;
-      return diary._doc.water_amount;
-    });
-    return res.status(200).json({ data: data });
-  }
+  Diary.findByIdAndUpdate(diaryId, { $inc: { water_amount: amount} })
+    .then(() => res.status(200).json({ message: "Update successful!" }))
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ message: JSON.stringify(err) })
+    );
 });
 
 /**
@@ -567,6 +591,13 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
  *  put:
  *    summary: Update exercise
  *    tags: [DiaryExercise]
+ *    parameters:
+ *      - in: path
+ *        name: diaryId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Identify Diary
  *    requestBody:
  *      required: true
  *      content:
@@ -600,18 +631,13 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
 router.put("/exercise/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
   const { exercise } = req.body;
-  const response = await Diary.find({ diaryId: diaryId });
-  //Check diary date
-  if (response.length === 0) {
-    res.status(500).json({ message: "Diary not found!" });
-  } else {
-    try {
-      await Diary.findOneAndUpdate({ diaryId }, { exercise: exercise });
-      res.status(200).json({ message: "Save About success!" });
-    } catch (err) {
-      res.status(500).json({ message: JSON.stringify(err) });
-    }
-  }
+  Diary.findByIdAndUpdate(diaryId, {exercise: exercise})
+    .then(() => res.status(200).json({ message: "Save Exercise successful!" }))
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ message: JSON.stringify(err) })
+    );
 });
 
 /**
@@ -620,6 +646,13 @@ router.put("/exercise/:diaryId", async (req, res) => {
  *  put:
  *    summary: Update about
  *    tags: [DiaryAbout]
+ *    parameters:
+ *      - in: path
+ *        name: diaryId
+ *        schema:
+ *          type: string
+ *        required: true
+ *        description: Identify Diary
  *    requestBody:
  *      required: true
  *      content:
@@ -653,18 +686,13 @@ router.put("/exercise/:diaryId", async (req, res) => {
 router.put("/about/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
   const { about } = req.body;
-  const response = await Diary.find({ diaryId: diaryId });
-  //Check diary date
-  if (response.length === 0) {
-    res.status(500).json({ message: "Diary not found!" });
-  } else {
-    try {
-      await Diary.findOneAndUpdate({ diaryId }, { about: about });
-      res.status(200).json({ message: "Save About success!" });
-    } catch (err) {
-      res.status(500).json({ message: JSON.stringify(err) });
-    }
-  }
+  Diary.findByIdAndUpdate(diaryId, {about: about})
+    .then(() => res.status(200).json({ message: "Save About successful!" }))
+    .catch((err) =>
+      res
+        .status(500)
+        .json({ message: JSON.stringify(err) })
+    );
 });
 
 module.exports = router;
