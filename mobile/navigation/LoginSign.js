@@ -117,7 +117,7 @@ import {
     return (
     <NavigationContainer>
       <Stack.Navigator>
-      {splashLoading ? (
+      {onboardLoading ? (
         <Stack.Screen
         name={nameOnboarding}
         component={Onboarding}
