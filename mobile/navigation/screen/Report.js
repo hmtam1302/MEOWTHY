@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ImageBackground,
   TouchableOpacity,
+  AsyncStorage,
   ScrollView,
 } from "react-native";
 
@@ -69,7 +70,20 @@ const data = [
     comment: "Tập luyện đều đặn, giảm cân đúng tiến độ",
   },
 ];
+// const _retrieveData = async (key) => {
+//   try {
+//     const value = await AsyncStorage.getItem(key);
+//     if (value !== null) {
+//       // We have data!!
+//       console.log(value);
+//     }
+//   } catch (error) {
+//     // Error retrieving data
+//   }
+// };
 
+// // _retrieveData("userId");
+// console.log();
 const HEIGHT_CHART = 300;
 const MAX_KCAL = 1000;
 const { week, t2, t3, t4, t5, t6, t7, cn, Lweight, comment } = data.find(
@@ -92,6 +106,14 @@ const AVERAGE = Math.round(SUM / 7);
 function Report({ navigation }) {
   const [selectedTeam, setSelectedTeam] = React.useState({});
   const today = new Date();
+  const saveArticle = async (key, value) => {
+    try {
+      await AsyncStorage.setItem(key, value);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  saveArticle("picked", selectedTeam);
 
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
