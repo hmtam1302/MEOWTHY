@@ -49,7 +49,7 @@ require("dotenv").config();
 
 /**
  * @swagger
- * /:
+ * /food:
  *  get:
  *    summary: Get all food available
  *    tags: [Food]
@@ -75,7 +75,7 @@ require("dotenv").config();
  *                  description: Error message
  *
  */
-router.get("/food", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
       const listFood = await Food.find({});
       return res.status(200).json({ data: listFood });
@@ -88,7 +88,7 @@ router.get("/food", async (req, res) => {
 
 /**
  * @swagger
- * /{foodId}:
+ * /food/{foodId}:
  *  put:
  *    summary: Change food in record
  *    tags: [FedFood]
@@ -161,7 +161,7 @@ router.get("/food", async (req, res) => {
  *
  */
 
- router.put("/food/:foodId", async (req, res) => {
+ router.put("/:foodId", async (req, res) => {
   const { foodId } = req.params
   const { amount, calories } = req.body;
   const fed_food = await FedFood.find({ _id: foodId });
@@ -183,7 +183,7 @@ router.get("/food", async (req, res) => {
 });
 
 
-router.delete("/food/:foodId", async (req, res) => {
+router.delete("/:foodId", async (req, res) => {
   const { foodId } = req.params;
   const response = await FedFood.find({ _id: foodId });
   const diary = await Diary.find({ diaryId: response._doc.diaryId });
