@@ -27,6 +27,7 @@ function EditUserModal(props) {
   const save = (name, phone, email) => {
     props.updateUser(name, phone, email);
     props.changeModalVisible(false);
+    props.onRefresh();
   };
 
   return (
@@ -62,7 +63,9 @@ function EditUserModal(props) {
           <RedButton title="Hủy" onPress={() => cancel()} />
           <BlueButton
             title="Lưu"
-            onPress={() => save(dataUser.username, phone, email)}
+            onPress={() => {
+              save(dataUser.username, phone, email);
+            }}
           />
         </View>
       </View>

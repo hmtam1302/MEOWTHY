@@ -56,12 +56,24 @@ const data = [
     Lweight: 500,
     comment: "Tập luyện đều đặn, giảm cân đúng tiến độ",
   },
+  {
+    week: 3,
+    t2: 300,
+    t3: 1000,
+    t4: 700,
+    t5: 300,
+    t6: 200,
+    t7: 100,
+    cn: 700,
+    Lweight: 500,
+    comment: "Tập luyện đều đặn, giảm cân đúng tiến độ",
+  },
 ];
 
 const HEIGHT_CHART = 300;
 const MAX_KCAL = 1000;
 const { week, t2, t3, t4, t5, t6, t7, cn, Lweight, comment } = data.find(
-  (item) => item.week === 2
+  (item) => item.week === 1
 );
 
 const HEIGHT_COLUMN = {
@@ -80,7 +92,7 @@ const AVERAGE = Math.round(SUM / 7);
 function Report({ navigation }) {
   const [selectedTeam, setSelectedTeam] = React.useState({});
   const today = new Date();
-  console.log(today);
+
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView

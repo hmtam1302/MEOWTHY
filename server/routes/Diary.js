@@ -2,12 +2,11 @@ const express = require("express");
 const router = express.Router();
 const Diary = require("../models/Diary");
 const FedFood = require("../models/FedFood");
-const Cat = require('../models/Cat');
-const Weight = require('../models/Weight');
-const Goal = require('../models/Goal');
+const Cat = require("../models/Cat");
+const Weight = require("../models/Weight");
+const Goal = require("../models/Goal");
 
 require("dotenv").config();
-
 
 //Swagger Diary schema
 /**
@@ -29,13 +28,13 @@ require("dotenv").config();
  *        date:
  *          type: Date
  *          description: Date of diary record
- *        food_calories: 
+ *        food_calories:
  *          type: number
  *          description: Calories record
- *        water_amount:  
+ *        water_amount:
  *          type: number
  *          description: Water record
- *        exercise: 
+ *        exercise:
  *          type: string
  *          description: Exercise record
  *        about:
@@ -44,11 +43,11 @@ require("dotenv").config();
  *        weight:
  *          type: array
  *          items:
- *            $ref: '#/components/schemas/CatWeight' 
+ *            $ref: '#/components/schemas/CatWeight'
  *        goal:
  *          type: array
  *          items:
- *            $ref: '#/components/schemas/CatGoal' 
+ *            $ref: '#/components/schemas/CatGoal'
  *      example:
  *        {
  *          _id: diary123456789,
@@ -59,21 +58,20 @@ require("dotenv").config();
  *          exercise: "",
  *          about: "",
  *          weight: [{
- *              _id: weight123456,         
+ *              _id: weight123456,
  *              catId: abc123456789,
- *              catWeight: 1,    
+ *              catWeight: 1,
  *              date: "2022-05-16T16:55:13.254Z",
  *          }],
  *          goal: [{
- *              _id: goal123456,        
+ *              _id: goal123456,
  *              catId: abc123456789,
- *              catGoal: 1,    
- *              date: "2022-05-16T16:55:13.254Z",  
+ *              catGoal: 1,
+ *              date: "2022-05-16T16:55:13.254Z",
  *          }]
  *        }
  */
 
-
 /**
  * @swagger
  * components:
@@ -93,7 +91,6 @@ require("dotenv").config();
  *      items:
  *         $ref: '#/components/schemas/Diary'
  */
-
 
 /**
  * @swagger
@@ -145,10 +142,10 @@ require("dotenv").config();
  *        name:
  *          type: string
  *          description: Food name
- *        amount:  
+ *        amount:
  *          type: number
  *          description: Food amount
- *        calories: 
+ *        calories:
  *          type: number
  *          description: Food calories
  *      example:
@@ -188,7 +185,7 @@ require("dotenv").config();
  *      required:
  *        - amount
  *      properties:
- *        amount:  
+ *        amount:
  *          type: number
  *          description: Water amount
  *      example:
@@ -204,7 +201,7 @@ require("dotenv").config();
  *      required:
  *        - exercise
  *      properties:
- *        exercise:  
+ *        exercise:
  *          type: string
  *          description: About the chosen cat record
  *      example:
@@ -220,14 +217,13 @@ require("dotenv").config();
  *      required:
  *        - about
  *      properties:
- *        about:  
+ *        about:
  *          type: string
  *          description: Exercise record
  *      example:
  *        about: "Today A is a good girl"
  */
 //------------------------------------------------------
-
 
 /**
  * @swagger
@@ -264,7 +260,7 @@ require("dotenv").config();
  *                  description: Error message
  *
  */
- router.get('/list-diary/:catId', async (req, res) => {
+router.get("/list-diary/:catId", async (req, res) => {
   try {
     const { catId } = req.params;
     const listDiary = await Diary.find({ catId });
@@ -273,7 +269,6 @@ require("dotenv").config();
     res.status(500).json({ message: JSON.stringify(err) });
   }
 });
-
 
 /**
  * @swagger
@@ -291,7 +286,7 @@ require("dotenv").config();
  *    requestBody:
  *      required: true
  *      content:
- *        application/json: 
+ *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/DiaryAdd'
  *    responses:
@@ -321,27 +316,31 @@ require("dotenv").config();
 router.post("/add-diary/:catId", async (req, res) => {
   const { catId } = req.params;
   const response = await Cat.find({ catId });
+  const day = new Date();
+  const today =
+    day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
   if (response.length === 0) {
     res.status(500).json({ message: "Wrong catId!" });
   } else {
     try {
       const dbDiary = new Diary({
         catId: catId,
-        date: new Date(),
+        // date: new Date(),
+        date: today,
         food_calories: 0,
         water_amount: 0,
-        exercise: "",
-        about: "",
+        exercise: "Lên kế hoạch tập luyện cho bé nào!",
+        about: "Hôm nay bé thế nào?",
       });
 
       // Save diary to db
       await dbDiary.save();
       res.status(200).json({ message: "Create today diary successfully!" });
-
-    } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
+    } catch (err) {
+      res.status(500).json({ message: JSON.stringify(err) });
+    }
   }
 });
-
 
 /**
  * @swagger
@@ -379,15 +378,19 @@ router.post("/add-diary/:catId", async (req, res) => {
  *
  */
 
-router.get('/diary/:diaryId', async (req, res) => {
+router.get("/diary/:diaryId", async (req, res) => {
   try {
     const { diaryId } = req.params;
     const diary = await Diary.find({ diaryId });
     const data = await Promise(async () => {
-      const weight = await Weight.find({ catId: diary._doc.catId }).sort({ date: -1 });
+      const weight = await Weight.find({ catId: diary._doc.catId }).sort({
+        date: -1,
+      });
       diary._doc.weight = weight;
 
-      const goal = await Goal.find({ catId: diary._doc.catId }).sort({ date: -1 });
+      const goal = await Goal.find({ catId: diary._doc.catId }).sort({
+        date: -1,
+      });
       diary._doc.goal = goal;
       return diary;
     });
@@ -395,9 +398,7 @@ router.get('/diary/:diaryId', async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }
-})
-
-
+});
 
 /**
  * @swagger
@@ -435,16 +436,15 @@ router.get('/diary/:diaryId', async (req, res) => {
  *
  */
 
-router.get('/diary/:diaryId/list-food', async (req, res) => {
+router.get("/diary/:diaryId/list-food", async (req, res) => {
   try {
     const { diaryId } = req.params;
-    const listFood = await FedFood.find({diaryId : diaryId })
+    const listFood = await FedFood.find({ diaryId: diaryId });
     return res.status(200).json({ data: listFood });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }
-})
-
+});
 
 /**
  * @swagger
@@ -462,7 +462,7 @@ router.get('/diary/:diaryId/list-food', async (req, res) => {
  *    requestBody:
  *      required: true
  *      content:
- *        application/json: 
+ *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/FedFoodAdd'
  *    responses:
@@ -490,7 +490,7 @@ router.get('/diary/:diaryId/list-food', async (req, res) => {
  */
 
 router.post("/add-food/:diaryId", async (req, res) => {
-  const { diaryId } = req.params
+  const { diaryId } = req.params;
   const { foodname, amount, calories } = req.body;
   const diary = await Diary.find({ diaryId: diaryId });
   try {
@@ -505,10 +505,10 @@ router.post("/add-food/:diaryId", async (req, res) => {
     await dbFedFood.save();
     diary._doc.food_calories += calories;
     res.status(200).json({ message: "Add fed food successfully!" });
-  } catch (err) { res.status(500).json({ message: JSON.stringify(err) }) };
-})
-
-
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
+  }
+});
 
 /**
  * @swagger
@@ -519,7 +519,7 @@ router.post("/add-food/:diaryId", async (req, res) => {
  *    requestBody:
  *      required: true
  *      content:
- *        application/json: 
+ *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/DiaryChangeWaterAmount'
  *    responses:
@@ -561,7 +561,6 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
   }
 });
 
-
 /**
  * @swagger
  * /diary/exercise/{diaryId}:
@@ -571,7 +570,7 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
  *    requestBody:
  *      required: true
  *      content:
- *        application/json: 
+ *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/DiaryExerciseUpdate'
  *    responses:
@@ -599,7 +598,7 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
  */
 
 router.put("/exercise/:diaryId", async (req, res) => {
-  const { diaryId } = req.params
+  const { diaryId } = req.params;
   const { exercise } = req.body;
   const response = await Diary.find({ diaryId: diaryId });
   //Check diary date
@@ -607,17 +606,13 @@ router.put("/exercise/:diaryId", async (req, res) => {
     res.status(500).json({ message: "Diary not found!" });
   } else {
     try {
-        await Diary.findOneAndUpdate(
-          { diaryId },
-          { exercise: exercise }
-        );
-        res.status(200).json({ message: "Save About success!" });
+      await Diary.findOneAndUpdate({ diaryId }, { exercise: exercise });
+      res.status(200).json({ message: "Save About success!" });
     } catch (err) {
       res.status(500).json({ message: JSON.stringify(err) });
     }
   }
 });
-
 
 /**
  * @swagger
@@ -628,7 +623,7 @@ router.put("/exercise/:diaryId", async (req, res) => {
  *    requestBody:
  *      required: true
  *      content:
- *        application/json: 
+ *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/DiaryAboutUpdate'
  *    responses:
@@ -656,7 +651,7 @@ router.put("/exercise/:diaryId", async (req, res) => {
  */
 
 router.put("/about/:diaryId", async (req, res) => {
-  const { diaryId } = req.params
+  const { diaryId } = req.params;
   const { about } = req.body;
   const response = await Diary.find({ diaryId: diaryId });
   //Check diary date
@@ -664,17 +659,12 @@ router.put("/about/:diaryId", async (req, res) => {
     res.status(500).json({ message: "Diary not found!" });
   } else {
     try {
-        await Diary.findOneAndUpdate(
-          { diaryId },
-          { about: about }
-        );
-        res.status(200).json({ message: "Save About success!" });
+      await Diary.findOneAndUpdate({ diaryId }, { about: about });
+      res.status(200).json({ message: "Save About success!" });
     } catch (err) {
       res.status(500).json({ message: JSON.stringify(err) });
     }
   }
 });
-
-
 
 module.exports = router;

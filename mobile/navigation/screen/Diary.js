@@ -12,14 +12,30 @@ import {
 import Feather from "react-native-vector-icons/Feather";
 import colors from "../../assets/colors/colors";
 import diaryData from "../../assets/data/diaryData";
-const image = require("../../assets/image/bgpurple.png");
 import DateTimePicker from "@react-native-community/datetimepicker";
+import axios from "axios";
+
+const image = require("../../assets/image/bgpurple.png");
 
 function Diary({ navigation }) {
-  const [data, setData] = React.useState(...diaryData);
+  // ---------------const-----------------------
+  const catId = "6295d99ed9e2de2d088600dc";
+  const URL = "http://10.0.2.2:3000/";
+  const day = new Date();
+  const today =
+    day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+
+  // ------------------useState---------------------
+  const [data, setData] = React.useState(diaryData);
+  const [listDiary, setListDiary] = React.useState([]);
+  const [diaryId, setDiaryId] = React.useState("");
+
   const [date, setDate] = React.useState(new Date());
   const [show, setShow] = React.useState(false);
   const [text, setText] = React.useState("Hôm nay");
+  const [count, setCount] = React.useState(0);
+
+  // ------------------function-----------------------
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -34,9 +50,64 @@ function Diary({ navigation }) {
       "-" +
       tempDate.getFullYear();
     setText(fDate);
-    console.log(currentDate);
   };
 
+  const handleAddDiary = (today) => {
+    const todayDiary = listDiary.find((element) => element.date === today);
+    if (count == 1) {
+      if (todayDiary) {
+        console.log("inside if set data && get diaryID", count);
+        setCount(count + 1);
+      } else {
+        console.log("dont have diary today, add new");
+        addDiary();
+      }
+    }
+    if (count > 1) {
+      setData(todayDiary);
+      setDiaryId(todayDiary._id);
+    }
+  };
+
+  // ----------------call API-----------------
+  // get list diary
+  const getListDiary = async () => {
+    try {
+      const resListDiary = await axios
+        .get(`${URL}diary/list-diary/${catId}`)
+        .then((res) => {
+          setListDiary(res.data.data);
+          setCount(count + 1);
+        });
+    } catch (error) {
+      console.log("error:", error);
+      alert(error);
+    }
+  };
+
+  // post diary
+  const addDiary = async () => {
+    try {
+      const res = await axios
+        .post(`${URL}diary/add-diary/${catId}`, {})
+
+        .then(() => getListDiary());
+    } catch (error) {
+      console.log("error:", error);
+      alert(error);
+    }
+  };
+
+  React.useEffect(() => {
+    getListDiary();
+  }, []);
+  React.useEffect(() => {
+    handleAddDiary(today);
+  }, [count]);
+
+  console.log(count, "data", data._id), console.log(count, "diaryId", diaryId);
+
+  // -------------------------
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -126,7 +197,11 @@ function Diary({ navigation }) {
           {/* wrapper 2 */}
           <View style={styles.boxWrapperLine2}>
             {/* tập luyện */}
-            <TouchableOpacity onPress={() => navigation.navigate("Exercise")}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Exercise", { diaryId: diaryId })
+              }
+            >
               <View style={styles.boxtItem}>
                 <View style={styles.boxWrapperLeftLine2}>
                   <View style={styles.boxWrapperTop}>
@@ -238,18 +313,18 @@ const styles = StyleSheet.create({
 
   boxWrapper: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
   },
   boxWrapperLine2: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginTop: 15,
   },
   boxtItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 140,
-    height: 140,
+    width: 150,
+    height: 150,
     borderRadius: 16,
     borderColor: "#A9A9A9",
     borderWidth: 1,

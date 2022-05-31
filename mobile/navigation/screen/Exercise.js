@@ -11,14 +11,29 @@ import {
 } from "react-native";
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+import axios from "axios";
 import colors from "../../assets/colors/colors";
 import RedButton from "../../components/button/redButton";
 import BlueButton from "../../components/button/blueButton";
 
 const image = require("../../assets/image/bgyl.png");
+const URL = "http://10.0.2.2:3000/";
 
-function Exercise({ props, navigation }) {
+function Exercise({ route, navigation }) {
   const [value, onChangeText] = React.useState();
+  const { diaryId } = route.params;
+  console.log(diaryId);
+
+  const putExercise = async (value) => {
+    try {
+      const res = await axios.put(`${URL}diary/exercise/${diaryId}`, {
+        _id: diaryId,
+        exercise: value,
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
@@ -50,8 +65,14 @@ function Exercise({ props, navigation }) {
             }
           />
           <View style={styles.buttonWrap}>
-            <RedButton title="Hủy" onPress={() => alert("hủy")} />
-            <BlueButton title="Lưu" onPress={() => alert("Lưu")} />
+            <RedButton title="Hủy" onPress={() => navigation.goBack()} />
+            <BlueButton
+              title="Lưu"
+              onPress={() => {
+                putExercise(value);
+                navigation.goBack();
+              }}
+            />
           </View>
         </SafeAreaView>
       </ScrollView>

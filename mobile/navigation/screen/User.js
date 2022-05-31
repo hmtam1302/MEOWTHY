@@ -9,6 +9,7 @@ import {
   ScrollView,
   Modal,
   Image,
+  RefreshControl,
 } from "react-native";
 
 import { launchImageLibrary } from "react-native-image-picker";
@@ -28,69 +29,20 @@ const image = require("../../assets/image/bgpurple.png");
 const username = "synguyen";
 const URL = "http://10.0.2.2:3000/";
 
-// ----------------
-
 function User({ navigation }) {
-  const [dataUser, setDataUser] = React.useState(...userData);
-  // const [options, setOptions] = React.useState([]);
+  const [dataUser, setDataUser] = React.useState({});
+  const [count, setcount] = React.useState(0);
 
-  const openGallary = async () => {
-    const imageFromLib = await launchImageLibrary({
-      maxHeight: 200,
-      maxWidth: 200,
-      selectionLimit: 1,
-      mediaType: "photo",
-      includeBase64: true,
-    });
-    console.log(imageFromLib.assets[0].base64);
-  };
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState({});
 
-  const getDataUser = async () => {
-    try {
-      const resDataUser = await axios
-        .get(`${URL}user/${username}`)
-        .then((res) => {
-          setDataUser(res.data.data);
-        });
-      saveArticle("userId", dataUser._id);
-    } catch (error) {
-      console.log("error:", error);
-      alert(error);
-    }
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
   };
 
-  // const getListCat = async () => {
-  //   try {
-  //     console.log(dataUser._id);
-  //     const resListCat = await axios
-  //       .get(`${URL}cat/list-cat/${dataUser._id}`)
-  //       .then((response) => {
-  //         setOptions(response.data);
-  //         console.log(response.data.catName);
-  //         console.log(options.catName);
-  //       });
-  //   } catch (error) {
-  //     console.log("error:", error, "list cat");
-  //   }
-  // };
-
-  const updateDataUser = async (name, phone, email) => {
-    try {
-      const res = await axios
-        .put(`${URL}user/update`, {
-          username: name,
-          email: email,
-          phone: phone,
-        })
-        .then((response) => console.log(response.data));
-    } catch (error) {
-      console.log("error:", error);
-      alert(error);
-    }
-  };
+  // -----------------function------------------
 
   const changeModalVisible = (bool) => {
     setIsModalVisible(bool);
@@ -109,15 +61,84 @@ function User({ navigation }) {
     }
   };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getDataUser();
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
+
+  // ------------------change avatar-------------------
+  const openGallary = async () => {
+    const imageFromLib = await launchImageLibrary({
+      maxHeight: 200,
+      maxWidth: 200,
+      selectionLimit: 1,
+      mediaType: "photo",
+      includeBase64: true,
+    });
+
+    dataUser.avatar = `data:image/png;base64,${imageFromLib.assets[0].base64}`;
+    updateAvatar(dataUser.avatar);
+    setcount(count + 1);
+  };
+
+  //------------call API ------------------------
+  const getDataUser = async () => {
+    try {
+      const resDataUser = await axios
+        .get(`${URL}user/${username}`)
+        .then((res) => {
+          setDataUser(res.data.data);
+          console.log("error:request");
+          saveArticle("userId", dataUser._id);
+        });
+    } catch (error) {
+      console.log("error:", error);
+      alert(error);
+    }
+  };
+
+  const updateDataUser = async (name, phone, email) => {
+    try {
+      const res = await axios
+        .put(`${URL}user/update`, {
+          username: name,
+          email: email,
+          phone: phone,
+          avatar: dataUser.avatar,
+        })
+        .then((response) => console.log(response.data));
+    } catch (error) {
+      console.log("error:", error);
+      alert(error);
+    }
+  };
+
+  const updateAvatar = async (avatar) => {
+    try {
+      const res = await axios.put(`${URL}user/update`, {
+        username: username,
+        avatar: avatar,
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  // --------------useEffect---------------------
   React.useEffect(() => {
     getDataUser();
-    // getListCat();
   }, []);
+
+  React.useEffect(() => {}, [count]);
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <SafeAreaView>
           {/* top info*/}
@@ -128,7 +149,9 @@ function User({ navigation }) {
                   <Image
                     style={styles.avatar}
                     source={
-                      dataUser.image || require("../../assets/image/cat.png")
+                      dataUser.avatar === ""
+                        ? require("../../assets/image/cat.png")
+                        : { uri: dataUser.avatar }
                     }
                   />
                 </TouchableOpacity>
@@ -165,6 +188,7 @@ function User({ navigation }) {
                   changeModalVisible={changeModalVisible}
                   updateUser={updateUser}
                   dataUser={dataUser}
+                  onRefresh={onRefresh}
                 />
               </Modal>
             </View>
