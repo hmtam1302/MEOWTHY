@@ -12,6 +12,7 @@ import {
 import AppIntroSlider from 'react-native-app-intro-slider';
 import colors from "../../assets/colors/colors";
 import Feather from "react-native-vector-icons/Feather";
+import {AuthContext} from '../../context/AuthContext';
 
 
 const slides = [

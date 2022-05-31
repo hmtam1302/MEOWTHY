@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, {useContext, useState} from 'react';
 import {
   Text,  View,  StyleSheet,  SafeAreaView,  ImageBackground,
   Image,  TextInput,  TouchableOpacity,  ScrollView, Dimensions,
@@ -6,10 +6,14 @@ import {
 
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import colors from "../../../assets/colors/colors";
+import {AuthContext} from '../../../context/AuthContext';
 
 const image = require("../../../assets/image/bgpurple.png");
-
+const URL = "https://meowthy-project.herokuapp.com"
 function Login({navigation}) {
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <View style={styles.header}>
@@ -27,7 +31,9 @@ function Login({navigation}) {
         <TextInput
             style={styles.textInput}
             placeholder="Email/SĐT"
-          />
+            value={username}
+            onChangeText={text => setUsername(text)}
+            />
         </View>
         <Text style={styles.ttinfo}> Mật khẩu </Text>
         <View style={styles.inputInfo}> 
@@ -35,12 +41,20 @@ function Login({navigation}) {
         <TextInput
             style={styles.textInput}
             placeholder="Mật khẩu"
+            value={password}
+            onChangeText={text => setPassword(text)}
+            secureTextEntry
         />
         </View>
         <TouchableOpacity onPress={() => navigation.navigate("LoginForgot1")} >
           <Text style={styles.forgot}>Quên mật khẩu ?</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={()=>alert("đăng nhập")}><Text style={styles.textButton}>Đăng nhập</Text></TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={()=>login(user, password)}
+        >
+            <Text style={styles.textButton}>Đăng nhập</Text>
+        </TouchableOpacity>
         <Text style={styles.noaccount}>Chưa có tài khoản ? <TouchableOpacity onPress={()=> navigation.navigate("Signup")}>
           <Text style={styles.register}>Đăng ký</Text>
         </TouchableOpacity> </Text>
