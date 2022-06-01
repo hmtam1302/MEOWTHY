@@ -10,10 +10,11 @@ import {AuthContext} from '../../../context/AuthContext';
 
 const image = require("../../../assets/image/bgpurple.png");
 const URL = "https://meowthy-project.herokuapp.com"
+
 function Login({navigation}) {
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  
+  const {login} = useContext(AuthContext);
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <View style={styles.header}>
@@ -51,7 +52,7 @@ function Login({navigation}) {
         </TouchableOpacity>
         <TouchableOpacity 
           style={styles.button} 
-          onPress={()=>login(user, password)}
+          onPress={()=>login(username, password)}
         >
             <Text style={styles.textButton}>Đăng nhập</Text>
         </TouchableOpacity>

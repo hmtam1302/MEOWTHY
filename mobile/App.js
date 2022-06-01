@@ -7,15 +7,16 @@ import { AsyncStorage } from "react-native";
 const Stack = createNativeStackNavigator();
 import MainContainer from "./navigation/MainContainer";
 import LoginSign from "./navigation/LoginSign";
-import {AuthProvider} from './context/AuthContext';
-
+import {AuthContext} from './context/AuthContext';
+//import Test from "./context/test";
 function App() {
-  return <MainContainer />;
+  //return <MainContainer />;
   
-  /*return
-  <AuthProvider>
-    <LoginSign />
-  </AuthProvider>;*/
+  return (
+    <AuthContext.Provider>
+      <LoginSign />
+    </AuthContext.Provider>
+  );
 }
 
 export default App;
