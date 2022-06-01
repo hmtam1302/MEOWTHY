@@ -287,7 +287,6 @@ router.get("/list-diary/:catId", async (req, res) => {
             diary._doc.goal = listGoal;
             return diary;
         }));
-        console.log(returnValue)
         return res.status(200).json({ data: returnValue });
       } else {
         return res.status(500).json({ message: "Cannot found cat with given id" })
