@@ -6,17 +6,11 @@ import { AsyncStorage } from "react-native";
 
 const Stack = createNativeStackNavigator();
 import MainContainer from "./navigation/MainContainer";
-import LoginSign from "./navigation/LoginSign";
-import {AuthContext} from './context/AuthContext';
-//import Test from "./context/test";
+import Login from "./navigation/screen/Login/Login";
 function App() {
-  //return <MainContainer />;
-  
-  return (
-    <AuthContext.Provider>
-      <LoginSign />
-    </AuthContext.Provider>
-  );
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+    if (isLoggedIn) return <MainContainer />;
+    else return <Login setIsLoggedIn={setIsLoggedIn} />;
 }
 
 export default App;
