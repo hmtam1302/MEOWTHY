@@ -12,9 +12,9 @@ import colors from "../../assets/colors/colors";
 import Feather from "react-native-vector-icons/Feather";
 import axios from "axios";
 
-const URL = "http://10.0.2.2:3000/";
+const URL = "https://meowthy-project.herokuapp.com/";
 
-export default RenderListFood = ({ item, deleteFood, wait, onRefresh }) => {
+export default RenderListFood = ({ item, deleteFood }) => {
   const [weight, setWeight] = React.useState(item.amount);
   const [calories, setCalories] = React.useState(item.calories);
 
@@ -31,12 +31,10 @@ export default RenderListFood = ({ item, deleteFood, wait, onRefresh }) => {
         try {
           console.log(weight);
 
-          const res = await axios
-            .put(`${URL}food/${foodId}`, {
-              amount: weight,
-              calories: (84 / 100) * weight,
-            })
-            .then(() => wait(2000).then(() => onRefresh()));
+          const res = await axios.put(`${URL}food/${foodId}`, {
+            amount: weight,
+            calories: (84 / 100) * weight,
+          });
         } catch (error) {
           alert(error);
         }
@@ -46,12 +44,10 @@ export default RenderListFood = ({ item, deleteFood, wait, onRefresh }) => {
         try {
           console.log(weight);
 
-          const res = await axios
-            .put(`${URL}food/${foodId}`, {
-              amount: weight,
-              calories: (130 / 100) * weight,
-            })
-            .then(() => wait(2000).then(() => onRefresh()));
+          const res = await axios.put(`${URL}food/${foodId}`, {
+            amount: weight,
+            calories: (130 / 100) * weight,
+          });
         } catch (error) {
           alert(error);
         }
@@ -60,12 +56,10 @@ export default RenderListFood = ({ item, deleteFood, wait, onRefresh }) => {
       case "Cá":
         try {
           console.log(weight);
-          const res = await axios
-            .put(`${URL}food/${foodId}`, {
-              amount: weight,
-              calories: (200 / 100) * weight,
-            })
-            .then(() => wait(2000).then(() => onRefresh()));
+          const res = await axios.put(`${URL}food/${foodId}`, {
+            amount: weight,
+            calories: (200 / 100) * weight,
+          });
         } catch (error) {
           alert(error);
         }
@@ -75,12 +69,10 @@ export default RenderListFood = ({ item, deleteFood, wait, onRefresh }) => {
         try {
           console.log(weight);
 
-          const res = await axios
-            .put(`${URL}food/${foodId}`, {
-              amount: weight,
-              calories: (280 / 100) * weight,
-            })
-            .then(() => wait(2000).then(() => onRefresh()));
+          const res = await axios.put(`${URL}food/${foodId}`, {
+            amount: weight,
+            calories: (280 / 100) * weight,
+          });
         } catch (error) {
           alert(error);
         }

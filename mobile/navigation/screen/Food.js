@@ -27,15 +27,7 @@ function Food({ route, navigation }) {
   const [sumCalories, setSumcalories] = React.useState();
   const [count, setCount] = React.useState();
 
-  const [dataFood, setDataFood] = React.useState([
-    {
-      id: "1",
-      name: "Thức ăn cho mèo",
-      amount: 0,
-      calories: 0,
-      image: require("../../assets/image/ct.png"),
-    },
-  ]);
+  const [dataFood, setDataFood] = React.useState([]);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -51,8 +43,8 @@ function Food({ route, navigation }) {
     try {
       const res = await axios
         .delete(`${URL}food/${foodId}`)
-        .then(() => wait(1000).then(() => onRefresh()))
-        .then(() => wait(1000).then(alert("Đã xóa")));
+        .then(() => wait(3000).then(() => onRefresh()))
+        .then(() => wait(2000).then(alert("Đã xóa")));
     } catch (error) {
       alert(error);
     }
@@ -123,6 +115,10 @@ function Food({ route, navigation }) {
       const resListFood = await axios
         .get(`${URL}diary/${diaryId}/list-food`)
         .then((res) => {
+          let list = res.data.data.map((item) => item.calories);
+          const sumK = list.reduce((a, b) => a + b, 0);
+          console.log(sumK);
+          setSumcalories(sumK);
           setDataFood(res.data.data);
           setCount(count + 1);
         });
@@ -143,25 +139,24 @@ function Food({ route, navigation }) {
   }, []);
 
   React.useEffect(() => {
-    if (count <= 2) {
-      getListFood();
-    } else wait(5000).then(() => getListFood());
-    sumCaloriesFunc();
-  }, [dataFood]);
+    getListFood();
+  }, []);
 
   var showListFood = dataFood;
-
-  const sumCaloriesFunc = () => {
-    const listKcal = dataFood.map((food) => food.calories);
-    const sumKcal = listKcal.reduce((sum, kcal) => sum + kcal, 0);
-    setSumcalories(sumKcal);
-  };
 
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            hitSlop={{ top: 0, width: "100%", height: 200 }}
+            style={{ position: "absolute", top: 0, height: "30%" }}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         <SafeAreaView>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -173,16 +168,7 @@ function Food({ route, navigation }) {
             />
           </TouchableOpacity>
 
-          <View
-            refreshControl={
-              <RefreshControl
-                style={{ position: "absolute", top: 0, height: "30%" }}
-                refreshing={refreshing}
-                onRefresh={onRefresh}
-              />
-            }
-            style={styles.titleWrapper}
-          >
+          <View style={styles.titleWrapper}>
             <Text style={styles.titleTitle}>Thức ăn</Text>
           </View>
           <Text style={styles.subTitle}>Bạn đã cho bé ăn gì hôm nay nào?</Text>

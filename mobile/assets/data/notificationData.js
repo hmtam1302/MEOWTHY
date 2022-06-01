@@ -2,14 +2,14 @@ const notificationData = [
   {
     id: "1",
     image: require("../image/ct.png"),
-    title: "Nhập mục tiêu",
+    title: "Hôm nay cho bé ăn gì nào?",
     date: "Hôm nay",
-    content: "Hôm nay bạn vẫn chưa cập nhật thông tin về bé. Mau nhập nào!",
+    content: "Hôm nay bạn vẫn chưa cập nhật bửa ăn cho bé. Mau nhập nào!",
   },
 
   {
     id: "2",
-    image: require("../image/ct.png"),
+    image: require("../image/sad.png"),
     title: "Nhập mục tiêu mới",
     date: "20/12/2021",
     content:
@@ -17,7 +17,7 @@ const notificationData = [
   },
   {
     id: "3",
-    image: require("../image/ct.png"),
+    image: require("../image/like.png"),
     title: "Nhập mục tiêu mới",
     date: "20/11/2021",
     content:

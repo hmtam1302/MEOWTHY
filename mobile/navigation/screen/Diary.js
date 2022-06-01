@@ -21,25 +21,30 @@ const image = require("../../assets/image/bgpurple.png");
 
 function Diary({ navigation }) {
   // ---------------const-----------------------
-  const catId = "6295d99ed9e2de2d088600dc";
+  const catId = "6297c0f3ac6c9e5f869b6c25";
   const URL = "https://meowthy-project.herokuapp.com/";
+  // const URL = "http://192.168.10.119:3000/";
   const day = new Date();
   const today =
     day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
-
+  console.log(today);
   // ------------------useState---------------------
 
   const [data, setData] = React.useState(diaryData);
   const [listDiary, setListDiary] = React.useState([]);
   const [diaryId, setDiaryId] = React.useState("");
+  const [weightObj, setweightObj] = React.useState({});
+  const [goalObj, setGoalObj] = React.useState({});
 
   const [compare, setCompare] = React.useState(true);
 
   const [date, setDate] = React.useState(new Date());
   const [show, setShow] = React.useState(false);
   const [dayTitle, setDayTitle] = React.useState("Hôm nay");
+  const [dayPicked, setDayPicked] = React.useState("Hôm nay");
   const [count, setCount] = React.useState(0);
   const [valueWater, onChangeValueWater] = React.useState(data.water_amount);
+  const [sumCalories, setSumcalories] = React.useState();
 
   const [refreshing, setRefreshing] = React.useState(false);
 
@@ -60,6 +65,11 @@ function Diary({ navigation }) {
       tempDate.getDate();
     setDayTitle(fDate);
     compareDay(today, fDate);
+
+    const diaryPicked = listDiary.find((item) => item.date == fDate);
+
+    if (diaryPicked._id) setData(diaryPicked);
+    else if (!diaryPicked._id) alert("ngày này không có nhật ký!!");
   };
 
   //compare
@@ -89,16 +99,41 @@ function Diary({ navigation }) {
         console.log("dont have diary today, add new");
         addDiary();
       }
-    }
-    if (count > 1) {
+    } else if (count >= 2 && count <= 5) {
+      setCount(count + 1);
+    } else if (count > 5) {
       setData(todayDiary);
       setDiaryId(todayDiary._id);
+
+      // set weight, goal
+      const weight = data.weight;
+      const goal = data.goal;
+
+      const lengthObj = weight.length - 1;
+
+      setweightObj(weight[lengthObj]);
+      setGoalObj(goal[lengthObj]);
     }
   };
 
   // ----------------call API-----------------
   // get list food
-
+  const getListFood = async (diaryId) => {
+    try {
+      const resListFood = await axios
+        .get(`${URL}diary/${diaryId}/list-food`)
+        .then((res) => {
+          let list = res.data.data.map((item) => item.calories);
+          const sumK = list.reduce((a, b) => a + b, 0);
+          console.log(sumK);
+          setSumcalories(sumK);
+          setDataFood(res.data.data);
+          setCount(count + 1);
+        });
+    } catch (error) {
+      console.log("error:", error);
+    }
+  };
   // get list diary
   const getListDiary = async () => {
     try {
@@ -118,8 +153,11 @@ function Diary({ navigation }) {
   const addDiary = async () => {
     try {
       const res = await axios
-        .post(`${URL}diary/add-diary/${catId}`, {})
+        .post(`${URL}diary/add-diary/${catId}`, {
+          date: today,
+        })
         .then(() => getListDiary());
+      console.log("addDiary", count);
     } catch (error) {
       console.log("error:", error);
       alert(error);
@@ -141,13 +179,15 @@ function Diary({ navigation }) {
 
   React.useEffect(() => {
     getListDiary();
-  }, []);
+  }, [catId]);
 
   React.useEffect(() => {
+    if (count > 3) getListFood(diaryId);
+  }, [sumCalories, count]);
+  React.useEffect(() => {
     handleAddDiary(today);
+    console.log(diaryId);
   }, [count]);
-
-  console.log(count, "data", data._id);
 
   // -------------------------
   return (
@@ -208,12 +248,12 @@ function Diary({ navigation }) {
                       <Text style={styles.text_s13_w600}>(Kcal)</Text>
                     </View>
 
-                    <Text style={styles.text_s32_w600}>200</Text>
+                    <Text style={styles.text_s32_w600}>{sumCalories}</Text>
                     <Text style={styles.text_s13_w400}>Cả ngày</Text>
                   </View>
                   <View style={styles.boxWrapperBottom}>
                     <Text style={styles.text_s13_600}>Mục tiêu </Text>
-                    <Text style={styles.text_s16_w600}>300</Text>
+                    <Text style={styles.text_s16_w600}>500</Text>
                   </View>
                 </View>
                 <View style={styles.boxWrapperRight}>
@@ -234,12 +274,15 @@ function Diary({ navigation }) {
                     <Text style={styles.text_s13_w600}>(Kg)</Text>
                   </View>
 
-                  <Text style={styles.text_s32_w600}>X.XX</Text>
-                  <Text style={styles.text_s13_w400}>XX tháng XX</Text>
+                  <Text style={styles.text_s32_w600}>
+                    {weightObj.catWeight}
+                  </Text>
+
+                  <Text style={styles.text_s13_w400}>{weightObj.date}</Text>
                 </View>
                 <View style={styles.boxWrapperBottom}>
                   <Text style={styles.text_s13_600}>Mục tiêu </Text>
-                  <Text style={styles.text_s16_w600}>X.XX</Text>
+                  <Text style={styles.text_s16_w600}>{goalObj.catGoal}</Text>
                 </View>
               </View>
               <View style={styles.boxWrapperRight}>
@@ -307,10 +350,7 @@ function Diary({ navigation }) {
                     }}
                     placeholder={`${data.water_amount}`}
                   />
-                  <Text style={styles.text_s13_w400}>
-                    {" "}
-                    / {data.water_amount}
-                  </Text>
+                  <Text style={styles.text_s13_w400}> / 200 ml</Text>
                 </View>
               </View>
               <View style={styles.boxWrapperRight}>

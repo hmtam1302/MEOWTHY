@@ -27,6 +27,13 @@ const image = require("../../assets/image/bgpurple.png");
 const username = "synguyen";
 const URL = "https://meowthy-project.herokuapp.com/";
 
+const K_OPTIONS = [
+  { id: 1, item: "mèo mập" },
+  { id: 2, item: "mèo Anh" },
+  { id: 3, item: "mèo tam thể" },
+  { id: 4, item: "mèo mun" },
+];
+
 function User({ navigation }) {
   const [dataUser, setDataUser] = React.useState({});
   const [count, setcount] = React.useState(0);
@@ -45,6 +52,7 @@ function User({ navigation }) {
   const updateUser = (name, phone, email) => {
     updateDataUser(name, phone, email);
     setDataUser({ username: name, phone: phone, email: email });
+    wait(2000).then(() => onRefresh());
   };
 
   const wait = (timeout) => {
@@ -152,18 +160,22 @@ function User({ navigation }) {
               </View>
 
               {/* edit */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
+                style={{ position: "absolute", right: 10 }}
                 onPress={() =>
-                  EditUserModal ? changeModalVisible(true) : alert("loi")
+                  EditUserModal ? changeModalVisible(true) : alert("error")
                 }
-              >
-                <FontAwesome5
-                  name="pen"
-                  size={24}
-                  color={colors.white}
-                  style={styles.editInfo}
-                />
-              </TouchableOpacity>
+              > */}
+              <FontAwesome5
+                onPress={() =>
+                  EditUserModal ? changeModalVisible(true) : alert("error")
+                }
+                name="pen"
+                size={24}
+                color={colors.white}
+                style={styles.editInfo}
+              />
+              {/* </TouchableOpacity> */}
 
               <Modal
                 transparent={true}
@@ -193,7 +205,7 @@ function User({ navigation }) {
             <View style={styles.bottomComponent_PdR20}>
               <View style={[styles.rowSp, { paddingBottom: 3 }]}>
                 <Text style={styles.subtitle}>Số lượng mèo</Text>
-                <Text style={styles.subtitle}>3</Text>
+                <Text style={styles.subtitle}>{K_OPTIONS.length}</Text>
               </View>
               <View style={styles.rowSp}>
                 <Text style={styles.subtitle}>Mèo mặc định</Text>
@@ -209,7 +221,7 @@ function User({ navigation }) {
                     labelStyle={{ fontSize: 13 }}
                     selectedItemStyle={{ fontSize: 13 }}
                     optionsLabelStyle={{ fontSize: 13 }}
-                    // options={options}
+                    options={K_OPTIONS}
                     value={selectedTeam}
                     label=""
                     onChange={(val) => setSelectedTeam(val)}
@@ -287,7 +299,8 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
   },
   editInfo: {
-    alignSelf: "flex-end",
+    position: "absolute",
+    right: 10,
   },
 
   infoUserName: {

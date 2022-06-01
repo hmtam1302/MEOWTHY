@@ -4,16 +4,11 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 const Stack = createNativeStackNavigator();
 import MainContainer from "./navigation/MainContainer";
-import LoginSign from "./navigation/LoginSign";
-import { AuthProvider } from "./context/AuthContext";
-
+import Login from "./navigation/screen/Login/Login";
 function App() {
-  return <MainContainer />;
-
-  return;
-  // <AuthProvider>
-  //   <LoginSign />
-  // </AuthProvider>;
+    const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+    if (isLoggedIn) return <MainContainer />;
+    else return <Login setIsLoggedIn={setIsLoggedIn} />;
 }
 
 export default App;

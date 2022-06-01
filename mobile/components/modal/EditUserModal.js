@@ -27,7 +27,6 @@ function EditUserModal(props) {
   const save = (name, phone, email) => {
     props.updateUser(name, phone, email);
     props.changeModalVisible(false);
-    props.onRefresh();
   };
 
   return (

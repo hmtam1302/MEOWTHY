@@ -22,7 +22,7 @@ function ListFoodModal(props) {
   const choosedFood = (id) => {
     props.addFood(id);
     props.changeModalVisible(false);
-    props.wait(5000).then(() => props.onRefresh());
+    props.wait(2000).then(() => props.onRefresh());
   };
 
   return (
