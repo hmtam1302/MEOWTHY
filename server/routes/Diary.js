@@ -278,7 +278,20 @@ router.get("/list-diary/:catId", async (req, res) => {
   try {
     const { catId } = req.params;
     const listDiary = await Diary.find({ catId });
-    return res.status(200).json({ data: listDiary });
+    let returnValue = listDiary._doc;
+    if (listDiary) {
+        const returnValue = await Promise.all(listDiary.map(async diary => {
+            const listWeight = await Weight.find({ catId });
+            diary._doc.weight = listWeight;
+            const listGoal = await Goal.find({ catId });
+            diary._doc.goal = listGoal;
+            return diary;
+        }));
+        console.log(returnValue)
+        return res.status(200).json({ data: returnValue });
+      } else {
+        return res.status(500).json({ message: "Cannot found cat with given id" })
+      }
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }
