@@ -22,7 +22,7 @@ const image = require("../../assets/image/bgpurple.png");
 function Diary({ navigation }) {
   // ---------------const-----------------------
   const catId = "6295d99ed9e2de2d088600dc";
-  const URL = "http://10.0.2.2:3000/";
+  const URL = "https://meowthy-project.herokuapp.com/";
   const day = new Date();
   const today =
     day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
@@ -72,6 +72,7 @@ function Diary({ navigation }) {
   const wait = (timeout) => {
     return new Promise((resolve) => setTimeout(resolve, timeout));
   };
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getListDiary();
@@ -96,6 +97,8 @@ function Diary({ navigation }) {
   };
 
   // ----------------call API-----------------
+  // get list food
+
   // get list diary
   const getListDiary = async () => {
     try {
@@ -116,7 +119,6 @@ function Diary({ navigation }) {
     try {
       const res = await axios
         .post(`${URL}diary/add-diary/${catId}`, {})
-
         .then(() => getListDiary());
     } catch (error) {
       console.log("error:", error);
@@ -140,11 +142,12 @@ function Diary({ navigation }) {
   React.useEffect(() => {
     getListDiary();
   }, []);
+
   React.useEffect(() => {
     handleAddDiary(today);
   }, [count]);
 
-  console.log(count, "data", data._id), console.log(count, "diaryId", diaryId);
+  console.log(count, "data", data._id);
 
   // -------------------------
   return (
@@ -205,12 +208,12 @@ function Diary({ navigation }) {
                       <Text style={styles.text_s13_w600}>(Kcal)</Text>
                     </View>
 
-                    <Text style={styles.text_s32_w600}>XXX</Text>
+                    <Text style={styles.text_s32_w600}>200</Text>
                     <Text style={styles.text_s13_w400}>Cả ngày</Text>
                   </View>
                   <View style={styles.boxWrapperBottom}>
                     <Text style={styles.text_s13_600}>Mục tiêu </Text>
-                    <Text style={styles.text_s16_w600}>XXX</Text>
+                    <Text style={styles.text_s16_w600}>300</Text>
                   </View>
                 </View>
                 <View style={styles.boxWrapperRight}>
@@ -289,7 +292,7 @@ function Diary({ navigation }) {
                   style={{
                     flexDirection: "row",
                     justifyContent: "space-evenly",
-                    marginBottom: 3,
+                    marginBottom: 5,
                   }}
                 >
                   <TextInput
@@ -304,7 +307,10 @@ function Diary({ navigation }) {
                     }}
                     placeholder={`${data.water_amount}`}
                   />
-                  <Text style={styles.text_s13_w400}> / 200 ml</Text>
+                  <Text style={styles.text_s13_w400}>
+                    {" "}
+                    / {data.water_amount}
+                  </Text>
                 </View>
               </View>
               <View style={styles.boxWrapperRight}>
@@ -402,8 +408,8 @@ const styles = StyleSheet.create({
   boxtItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    width: 150,
-    height: 150,
+    width: 145,
+    height: 145,
     borderRadius: 16,
     borderColor: "#A9A9A9",
     borderWidth: 1,
@@ -467,7 +473,7 @@ const styles = StyleSheet.create({
   },
   inputText: {
     width: 40,
-    height: 20,
+    height: 15,
     textAlignVertical: "center",
     alignContent: "flex-end",
     textAlign: "right",

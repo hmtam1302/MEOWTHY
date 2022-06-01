@@ -1,37 +1,84 @@
 const catData = [
-    {
-      catId: "1",
-      name: "MeoMeo",
-      age: "5",
-      gender: "female",
-      kind: "ragdoll",
-      about: "Bé rất rất là đáng eo",
-      weight: "6",
-      target: "5",
-      image:  require("../../assets/image/cat.png")
-    },
-    {
-      catId: "2",
-      name: "MiuMiu",
-      age: "2",
-      gender: "male",
-      kind: "ragdoll",  
-      about: "bé hơi trầm tính",
-      weight: "6",
-      target: "5",
-      image:  require("../../assets/image/cat.png")
-    },
-    {
-      catId: "3",
-      name: "MoeMoe",
-      age: "3",
-      gender: "male",
-      kind: "ragdoll",
-      about: "bé rất thích ăn cá",
-      weight: "6",
-      target: "5",
-      image:  require("../../assets/image/cat.png")
-    }
+  {
+    _id: "62955667b48a7ae7d3224d31",
+    userId: "62955667b48a7ae7d3224d2f",
+    catName: "Meow",
+    sex: "Cái",
+    breed: "Mèo ta",
+    bio: "bé năng động",
+    __v: 0,
+    weight: [
+        {
+            _id: "62955667b48a7ae7d3224d33",
+            catId: "62955667b48a7ae7d3224d31",
+            catWeight: 2,
+            date: "2022-05-30T23:42:31.810Z",
+            __v: 0
+        }
+    ],
+    goal: [
+        {
+            _id: "62955668b48a7ae7d3224d35",
+            catId: "62955667b48a7ae7d3224d31",
+            catGoal: 1.5,
+            date: "2022-05-30T23:42:32.038Z",
+            __v: 0
+        }
+    ]
+},
+{
+  _id: "62955667b48a7ae7d3224d32",
+  userId: "62955667b48a7ae7d3224d2f",
+  catName: "Meow",
+  sex: "Cái",
+  bio: "bé năng động",
+  breed: "Mèo ta",
+  __v: 0,
+  weight: [
+      {
+          _id: "62955667b48a7ae7d3224d33",
+          catId: "62955667b48a7ae7d3224d31",
+          catWeight: 2,
+          date: "2022-05-30T23:42:31.810Z",
+          __v: 0
+      }
+  ],
+  goal: [
+      {
+          _id: "62955668b48a7ae7d3224d35",
+          catId: "62955667b48a7ae7d3224d31",
+          catGoal: 1.5,
+          date: "2022-05-30T23:42:32.038Z",
+          __v: 0
+      }
+  ]
+},{
+  _id: "62955667b48a7ae7d3224d33",
+  userId: "62955667b48a7ae7d3224d2f",
+  catName: "Meow",
+  sex: "Cái",
+  bio: "bé năng động",
+  breed: "Mèo ta",
+  __v: 0,
+  weight: [
+      {
+          _id: "62955667b48a7ae7d3224d33",
+          catId: "62955667b48a7ae7d3224d31",
+          catWeight: 2,
+          date: "2022-05-30T23:42:31.810Z",
+          __v: 0
+      }
+  ],
+  goal: [
+      {
+          _id: "62955668b48a7ae7d3224d35",
+          catId: "62955667b48a7ae7d3224d31",
+          catGoal: 1.5,
+          date: "2022-05-30T23:42:32.038Z",
+          __v: 0
+      }
+  ]
+},
   ];
   
   export default catData;

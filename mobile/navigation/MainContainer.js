@@ -116,10 +116,10 @@ function MainContainer() {
           tabBarActiveTintColor: colors.yellow,
           tabBarInactiveTintColor: colors.gray,
         })}
-        tabBarOptions={{
-          lableStyle: { paddingBottom: 10, fontSize: 10, fontWeight: "bold" },
-          style: { padding: 10, height: 70 },
-        }}
+        // tabBarOptions={{
+        //   lableStyle: { paddingBottom: 10, fontSize: 10, fontWeight: "bold" },
+        //   style: { padding: 10, height: 70 },
+        // }}
       >
         <Tab.Screen
           options={{ headerShown: false }}

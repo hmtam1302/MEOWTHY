@@ -9,7 +9,6 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
-  TextInput,
   RefreshControl,
 } from "react-native";
 
@@ -17,14 +16,16 @@ import Feather from "react-native-vector-icons/Feather";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import colors from "../../assets/colors/colors";
 import ListFoodModal from "../../components/modal/ListFoodModal";
-import foodData from "../../assets/data/foodData";
 import axios from "axios";
+import RenderListFood from "../../components/renderListFood/RenderListFood";
 
 const image = require("../../assets/image/bgyl.png");
-const URL = "http://10.0.2.2:3000/";
+const URL = "https://meowthy-project.herokuapp.com/";
 
 function Food({ route, navigation }) {
   const { diaryId } = route.params;
+  const [sumCalories, setSumcalories] = React.useState();
+  const [count, setCount] = React.useState();
 
   const [dataFood, setDataFood] = React.useState([
     {
@@ -50,7 +51,8 @@ function Food({ route, navigation }) {
     try {
       const res = await axios
         .delete(`${URL}food/${foodId}`)
-        .then(() => wait(3000).then(() => onRefresh()));
+        .then(() => wait(1000).then(() => onRefresh()))
+        .then(() => wait(1000).then(alert("Đã xóa")));
     } catch (error) {
       alert(error);
     }
@@ -59,13 +61,12 @@ function Food({ route, navigation }) {
   // post food
 
   const addFood = async (id) => {
-    console.log("post food");
     switch (id) {
       case 0:
         console.log("post rice");
         try {
           const res = await axios.post(`${URL}diary/add-food/${diaryId}`, {
-            name: "Cơm",
+            name: "Pate",
             amount: 100,
             calories: 84,
           });
@@ -122,8 +123,8 @@ function Food({ route, navigation }) {
       const resListFood = await axios
         .get(`${URL}diary/${diaryId}/list-food`)
         .then((res) => {
-          console.log(res.data.data);
           setDataFood(res.data.data);
+          setCount(count + 1);
         });
     } catch (error) {
       console.log("error:", error);
@@ -142,17 +143,25 @@ function Food({ route, navigation }) {
   }, []);
 
   React.useEffect(() => {
-    getListFood();
-  }, []);
+    if (count <= 2) {
+      getListFood();
+    } else wait(5000).then(() => getListFood());
+    sumCaloriesFunc();
+  }, [dataFood]);
+
+  var showListFood = dataFood;
+
+  const sumCaloriesFunc = () => {
+    const listKcal = dataFood.map((food) => food.calories);
+    const sumKcal = listKcal.reduce((sum, kcal) => sum + kcal, 0);
+    setSumcalories(sumKcal);
+  };
 
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
       >
         <SafeAreaView>
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -164,7 +173,16 @@ function Food({ route, navigation }) {
             />
           </TouchableOpacity>
 
-          <View style={styles.titleWrapper}>
+          <View
+            refreshControl={
+              <RefreshControl
+                style={{ position: "absolute", top: 0, height: "30%" }}
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+              />
+            }
+            style={styles.titleWrapper}
+          >
             <Text style={styles.titleTitle}>Thức ăn</Text>
           </View>
           <Text style={styles.subTitle}>Bạn đã cho bé ăn gì hôm nay nào?</Text>
@@ -202,56 +220,15 @@ function Food({ route, navigation }) {
               contentInsetAdjustmentBehavior="automatic"
               showsVerticalScrollIndicator={false}
             >
-              {dataFood
-                ? dataFood.map((item) => {
-                    // const [weight, setWeight] = React.useState(item.weight);
-                    return (
-                      <View key={item._id} style={styles.FoodIteamWrapper}>
-                        <View style={styles.leftImage}>
-                          <Image source={item.image} style={styles.imageFood} />
-                        </View>
-                        <View style={styles.rightWrapper}>
-                          <View>
-                            <Text style={styles.text_s16_w600}>
-                              {item.name}
-                            </Text>
-                          </View>
-                          <View style={{ flexDirection: "row" }}>
-                            <TextInput
-                              style={styles.text_s16_w400}
-                              value={`${item.amount}`}
-                              // onChangeText={(text) => setWeight(text)}
-                            />
-                            <Feather
-                              name="edit-2"
-                              size={16}
-                              color={colors.black}
-                            />
-                          </View>
-                          <View style={styles.kcalWrap}>
-                            <Text style={styles.text_s24_w600}>
-                              {item.calories} Kcal
-                            </Text>
-                          </View>
-                        </View>
-                        <TouchableOpacity
-                          style={{
-                            position: "absolute",
-                            right: 5,
-                            top: 5,
-                            height: 20,
-                            width: 20,
-                          }}
-                          onPress={() => {
-                            deleteFood(item._id);
-                          }}
-                        >
-                          <Feather name="x" color={colors.yellow} size={16} />
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })
-                : null}
+              {showListFood.map((object) => (
+                <RenderListFood
+                  key={object._id}
+                  item={object}
+                  deleteFood={deleteFood}
+                  wait={wait}
+                  onRefresh={onRefresh}
+                />
+              ))}
             </ScrollView>
           </View>
 
@@ -267,7 +244,7 @@ function Food({ route, navigation }) {
                   color: colors.dark_yellow,
                 }}
               >
-                ZZZ Kcal
+                {sumCalories} Kcal
               </Text>
             </View>
             <Text
@@ -330,7 +307,7 @@ const styles = StyleSheet.create({
   },
 
   listFoodWrapper: {
-    height: 380,
+    height: 300,
   },
   FoodIteamWrapper: {
     flex: 1,

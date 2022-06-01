@@ -22,12 +22,10 @@ import EditUserModal from "../../components/modal/EditUserModal.js";
 import SelectBox from "react-native-multi-selectbox";
 import axios from "axios";
 
-import { AsyncStorage } from "react-native";
-
 const image = require("../../assets/image/bgpurple.png");
 
 const username = "synguyen";
-const URL = "http://10.0.2.2:3000/";
+const URL = "https://meowthy-project.herokuapp.com/";
 
 function User({ navigation }) {
   const [dataUser, setDataUser] = React.useState({});
@@ -47,14 +45,6 @@ function User({ navigation }) {
   const updateUser = (name, phone, email) => {
     updateDataUser(name, phone, email);
     setDataUser({ username: name, phone: phone, email: email });
-  };
-
-  const saveArticle = async (key, value) => {
-    try {
-      await AsyncStorage.setItem(key, value);
-    } catch (e) {
-      console.log(e);
-    }
   };
 
   const wait = (timeout) => {
@@ -88,8 +78,6 @@ function User({ navigation }) {
         .get(`${URL}user/${username}`)
         .then((res) => {
           setDataUser(res.data.data);
-          console.log("error:request");
-          saveArticle("userId", dataUser._id);
         });
     } catch (error) {
       console.log("error:", error);
@@ -129,7 +117,9 @@ function User({ navigation }) {
     getDataUser();
   }, []);
 
-  React.useEffect(() => {}, [count]);
+  console.log(dataUser.data);
+
+  console.log("ssss");
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView

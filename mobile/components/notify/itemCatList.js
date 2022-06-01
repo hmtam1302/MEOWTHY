@@ -12,7 +12,7 @@ export default function itemCatList({ item, navigation }) {
       </View>
       <View style={styles.rightItem}>
         <View style={styles.topRightItem}>
-          <Text style={styles.title}>{item.name}</Text>
+          <Text style={styles.title}>{item.catName}</Text>
           <View style={styles.row}>
             <TouchableOpacity onPress={()=> {alert("delete");}}>
             <Feather name="x" size={16} color={colors.dark_gray} />
@@ -23,11 +23,11 @@ export default function itemCatList({ item, navigation }) {
 
         <View style={styles.weightInfo}>
         <Text style={styles.content}>Hiện tại (kg)</Text>
-        <Text style={styles.contenti}>{item.weight}</Text>
+        <Text style={styles.contenti}>{item.weight[0].catWeight}</Text>
         </View>
         <View style={styles.weightInfo}>
         <Text style={styles.content}>Mục tiêu (kg)</Text>
-        <Text style={styles.contenti}>{item.target}</Text>
+        <Text style={styles.contenti}>{item.goal[0].catGoal}</Text>
         </View>
         </View>
       </View>

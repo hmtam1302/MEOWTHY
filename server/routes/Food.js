@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const Diary = require("../models/Diary");
 const Food = require("../models/Food");
 const FedFood = require("../models/FedFood");
 
@@ -42,6 +43,24 @@ require("dotenv").config();
  *      type: array
  *      items:
  *         $ref: '#/components/schemas/Food'
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
+ *    FedFoodUpdate:
+ *      type: object
+ *      properties:
+ *        amount:
+ *          type: number
+ *          description: amount of fed food
+ *        calories:
+ *          type: number
+ *          description: calories of fed food
+ *      example:
+ *        amount: 100
+ *        calories: 130
  */
 
 //------------------------------------------------------
@@ -88,7 +107,7 @@ router.get("/", async (req, res) => {
  * /food/{foodId}:
  *  put:
  *    summary: Change food in record
- *    tags: [FedFood]
+ *    tags: [DiaryFood]
  *    parameters:
  *      - in: path
  *        name: foodId
@@ -126,7 +145,7 @@ router.get("/", async (req, res) => {
  *
  *  delete:
  *    summary: Delete a food in record
- *    tags: [FedFood]
+ *    tags: [DiaryFood]
  *    parameters:
  *      - in: path
  *        name: foodId
@@ -162,15 +181,15 @@ router.put("/:foodId", async (req, res) => {
   const { foodId } = req.params;
   const { amount, calories } = req.body;
   const fed_food = await FedFood.find({ _id: foodId });
-  const diary = await Diary.find({ diaryId: fed_food._doc.diaryId });
+  const diary = await Diary.find({ diaryId: fed_food.diaryId });
   if (diary.length === 0) {
     res.status(500).json({ message: "Diary at the date not found" });
   } else {
-    diary._doc.food_calories += calories - fed_food._doc.calories;
-    FedFood.findOneAndUpdate(
-      { _id: foodId },
-      { amount: amount, calories: calories }
-    )
+    var inccalo = calories - fed_food.calories;
+    Diary.findByIdAndUpdate(fed_food.diaryId, {
+      $inc: { food_calories: inccalo },
+    });
+    FedFood.findByIdAndUpdate(foodId, { amount: amount, calories: calories })
       .then(() => {
         res.status(200).json({ message: "Update successful!" });
       })
@@ -195,14 +214,31 @@ router.put("/:foodId", async (req, res) => {
 // });
 
 router.delete("/:foodId", async (req, res) => {
-  try {
-    const { foodId } = req.params;
+  // <<<<<<< HEAD
+  //   try {
+  //     const { foodId } = req.params;
 
-    await FedFood.findByIdAndRemove(foodId);
+  //     await FedFood.findByIdAndRemove(foodId);
 
-    res.status(200).json({ message: "Delete cat successfully!" });
-  } catch (err) {
-    res.status(500).json({ message: JSON.stringify(err) });
+  //     res.status(200).json({ message: "Delete cat successfully!" });
+  //   } catch (err) {
+  //     res.status(500).json({ message: JSON.stringify(err) });
+  // =======
+  const { foodId } = req.params;
+  const response = await FedFood.find({ _id: foodId });
+  const diary = await Diary.find({ diaryId: response.diaryId });
+  if (response.length === 0) {
+    res.status(500).json({ message: "Selected food not found" });
+  } else {
+    Diary.findByIdAndUpdate(response.diaryId, {
+      $inc: { food_calories: -response.calories },
+    });
+    FedFood.findByIdAndDelete(foodId)
+      .then(() => {
+        res.status(200).json({ message: "Delete successful!" });
+      })
+      .catch((err) => res.status(500).json({ message: JSON.stringify(err) }));
+    // >>>>>>> c2d7d2a64bf768a46651bfad38db5413540aa2ba
   }
 });
 

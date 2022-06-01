@@ -19,7 +19,7 @@ import BlueButton from "../../components/button/blueButton";
 import _retrieveData from "../../assets/data/user";
 
 const image = require("../../assets/image/bgyl.png");
-const URL = "http://10.0.2.2:3000/";
+const URL = "https://meowthy-project.herokuapp.com/";
 
 function AboutCat({ route, navigation }) {
   const [value, onChangeText] = React.useState();

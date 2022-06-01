@@ -17,7 +17,7 @@ import RedButton from "../../components/button/redButton";
 import BlueButton from "../../components/button/blueButton";
 
 const image = require("../../assets/image/bgyl.png");
-const URL = "http://10.0.2.2:3000/";
+const URL = "https://meowthy-project.herokuapp.com/";
 
 function Exercise({ route, navigation }) {
   const [value, onChangeText] = React.useState();

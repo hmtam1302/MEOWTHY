@@ -162,6 +162,16 @@ require("dotenv").config();
  * @swagger
  * components:
  *  schemas:
+ *    ListFood:
+ *      type: array
+ *      items:
+ *         $ref: '#/components/schemas/DiaryFood'
+ */
+
+/**
+ * @swagger
+ * components:
+ *  schemas:
  *    FedFoodAdd:
  *      type: object
  *      properties:
@@ -176,24 +186,6 @@ require("dotenv").config();
  *          description: calories of fed food
  *      example:
  *        name: "Cơm"
- *        amount: 100
- *        calories: 130
- */
-
-/**
- * @swagger
- * components:
- *  schemas:
- *    FedFoodUpdate:
- *      type: object
- *      properties:
- *        amount:
- *          type: number
- *          description: amount of fed food
- *        calories:
- *          type: number
- *          description: calories of fed food
- *      example:
  *        amount: 100
  *        calories: 130
  */
@@ -447,7 +439,7 @@ router.get("/:diaryId", async (req, res) => {
  *              type: object
  *              properties:
  *                data:
- *                  $ref: '#/components/schemas/DiaryFood'
+ *                  $ref: '#/components/schemas/ListFood'
  *      '500':
  *        description: Error response
  *        content:
@@ -516,12 +508,11 @@ router.get("/:diaryId/list-food", async (req, res) => {
 
 router.post("/add-food/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
-  const { foodname, amount, calories } = req.body;
-  const diary = await Diary.find({ diaryId: diaryId });
+  const { name, amount, calories } = req.body;
   try {
     const dbFedFood = new FedFood({
       diaryId: diaryId,
-      name: foodname,
+      name: name,
       amount: amount,
       calories: calories,
     });
@@ -529,7 +520,7 @@ router.post("/add-food/:diaryId", async (req, res) => {
     // Save fed food to db
     await dbFedFood.save();
     Diary.findByIdAndUpdate(diaryId, { $inc: { food_calories: calories } });
-    res.status(200).json({ message: "Add fed food successfully!" });
+    res.status(200).json({ data: dbFedFood });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }
