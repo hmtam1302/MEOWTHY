@@ -22,6 +22,7 @@ function ListFoodModal(props) {
   const choosedFood = (id) => {
     props.addFood(id);
     props.changeModalVisible(false);
+    props.wait(5000).then(() => props.onRefresh());
   };
 
   return (
@@ -35,17 +36,22 @@ function ListFoodModal(props) {
         >
           <View style={styles.leftImage}>
             <Image
-              source={require("../../assets/image/fish.png")}
+              source={require("../../assets/image/pate.png")}
               style={styles.imageFood}
             />
           </View>
           <View style={styles.rightWrapper}>
             <View>
-              <Text style={styles.text_s16_w600}>Fish</Text>
+              <Text style={styles.text_s16_w600}>Pate</Text>
             </View>
-            <View style={{ alignSelf: "flex-end" }}>
+            <View
+              style={{
+                alignSelf: "flex-end",
+                justifyContent: "space-around",
+              }}
+            >
               <Text style={{ fontSize: 24, fontWeight: "500" }}>
-                500 Kcal/100g
+                84 Kcal/100g
               </Text>
             </View>
           </View>
@@ -69,7 +75,7 @@ function ListFoodModal(props) {
             </View>
             <View style={{ alignSelf: "flex-end" }}>
               <Text style={{ fontSize: 24, fontWeight: "500" }}>
-                500 Kcal/100g
+                130 Kcal/100g
               </Text>
             </View>
           </View>
@@ -78,6 +84,30 @@ function ListFoodModal(props) {
         <TouchableOpacity
           onPress={() => {
             choosedFood(2);
+          }}
+          style={styles.FoodIteamWrapper}
+        >
+          <View style={styles.leftImage}>
+            <Image
+              source={require("../../assets/image/fish.png")}
+              style={styles.imageFood}
+            />
+          </View>
+          <View style={styles.rightWrapper}>
+            <View>
+              <Text style={styles.text_s16_w600}>Fish</Text>
+            </View>
+            <View style={{ alignSelf: "flex-end" }}>
+              <Text style={{ fontSize: 24, fontWeight: "500" }}>
+                200 Kcal/100g
+              </Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            choosedFood(3);
           }}
           style={styles.FoodIteamWrapper}
         >
@@ -93,36 +123,7 @@ function ListFoodModal(props) {
             </View>
             <View style={{ alignSelf: "flex-end" }}>
               <Text style={{ fontSize: 24, fontWeight: "500" }}>
-                500 Kcal/100g
-              </Text>
-            </View>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            choosedFood(3);
-          }}
-          style={styles.FoodIteamWrapper}
-        >
-          <View style={styles.leftImage}>
-            <Image
-              source={require("../../assets/image/pate.png")}
-              style={styles.imageFood}
-            />
-          </View>
-          <View style={styles.rightWrapper}>
-            <View>
-              <Text style={styles.text_s16_w600}>Pate</Text>
-            </View>
-            <View
-              style={{
-                alignSelf: "flex-end",
-                justifyContent: "space-around",
-              }}
-            >
-              <Text style={{ fontSize: 24, fontWeight: "500" }}>
-                500 Kcal/100g
+                280 Kcal/100g
               </Text>
             </View>
           </View>

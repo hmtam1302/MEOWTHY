@@ -5,7 +5,6 @@ const FedFood = require("../models/FedFood");
 
 require("dotenv").config();
 
-
 //Swagger Food schema
 /**
  * @swagger
@@ -24,7 +23,7 @@ require("dotenv").config();
  *        amount:
  *          type: number
  *          description: default unit g
- *        calories: 
+ *        calories:
  *          type: number
  *          description: Calories per amount kcal
  *      example:
@@ -77,14 +76,12 @@ require("dotenv").config();
  */
 router.get("/", async (req, res) => {
   try {
-      const listFood = await Food.find({});
-      return res.status(200).json({ data: listFood });
+    const listFood = await Food.find({});
+    return res.status(200).json({ data: listFood });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
   }
 });
-
-
 
 /**
  * @swagger
@@ -102,7 +99,7 @@ router.get("/", async (req, res) => {
  *    requestBody:
  *      required: true
  *      content:
- *        application/json: 
+ *        application/json:
  *          schema:
  *            $ref: '#/components/schemas/FedFoodUpdate'
  *    responses:
@@ -126,7 +123,7 @@ router.get("/", async (req, res) => {
  *                message:
  *                  type: string
  *                  description: Error message
- * 
+ *
  *  delete:
  *    summary: Delete a food in record
  *    tags: [FedFood]
@@ -161,47 +158,52 @@ router.get("/", async (req, res) => {
  *
  */
 
- router.put("/:foodId", async (req, res) => {
-  const { foodId } = req.params
+router.put("/:foodId", async (req, res) => {
+  const { foodId } = req.params;
   const { amount, calories } = req.body;
   const fed_food = await FedFood.find({ _id: foodId });
   const diary = await Diary.find({ diaryId: fed_food._doc.diaryId });
   if (diary.length === 0) {
     res.status(500).json({ message: "Diary at the date not found" });
   } else {
-      diary._doc.food_calories += calories - fed_food._doc.calories;
-      FedFood.findOneAndUpdate({ _id : foodId }, {amount : amount, calories : calories})
+    diary._doc.food_calories += calories - fed_food._doc.calories;
+    FedFood.findOneAndUpdate(
+      { _id: foodId },
+      { amount: amount, calories: calories }
+    )
       .then(() => {
-        res.status(200).json({ message: "Update successful!" })
+        res.status(200).json({ message: "Update successful!" });
       })
-      .catch((err) =>
-        res
-          .status(500)
-          .json({ message: JSON.stringify(err) })
-      );
+      .catch((err) => res.status(500).json({ message: JSON.stringify(err) }));
   }
 });
 
+// router.delete("/:foodId", async (req, res) => {
+//   const { foodId } = req.params;
+//   const response = await FedFood.find({ _id: foodId });
+//   const diary = await Diary.find({ diaryId: response._doc.diaryId });
+//   if (response.length === 0) {
+//     res.status(500).json({ message: "Selected food not found" });
+//   } else {
+//     diary._doc.calories -= response._doc.calories;
+//     FedFood.findOneAndDelete({ _id: foodId })
+//       .then(() => {
+//         res.status(200).json({ message: "Delete successful!" });
+//       })
+//       .catch((err) => res.status(500).json({ message: JSON.stringify(err) }));
+//   }
+// });
 
 router.delete("/:foodId", async (req, res) => {
-  const { foodId } = req.params;
-  const response = await FedFood.find({ _id: foodId });
-  const diary = await Diary.find({ diaryId: response._doc.diaryId });
-  if (response.length === 0) {
-    res.status(500).json({ message: "Selected food not found" });
-  } else {
-    diary._doc.calories -= response._doc.calories;
-    FedFood.findOneAndDelete({ _id : foodId })
-    .then(() => {
-      res.status(200).json({ message: "Delete successful!" })
-    })
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ message: JSON.stringify(err) })
-    );
+  try {
+    const { foodId } = req.params;
+
+    await FedFood.findByIdAndRemove(foodId);
+
+    res.status(200).json({ message: "Delete cat successfully!" });
+  } catch (err) {
+    res.status(500).json({ message: JSON.stringify(err) });
   }
 });
-
 
 module.exports = router;

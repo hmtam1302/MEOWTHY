@@ -403,16 +403,22 @@ router.post("/add-diary/:catId", async (req, res) => {
 router.get("/:diaryId", async (req, res) => {
   try {
     const { diaryId } = req.params;
-    const diary = await Diary.findById( diaryId );
-    if(diary){
-      const weight = await Weight.find({ catId: diary._doc.catId }).sort({ date: -1 });
+    const diary = await Diary.findById(diaryId);
+    if (diary) {
+      const weight = await Weight.find({ catId: diary._doc.catId }).sort({
+        date: -1,
+      });
       diary._doc.weight = weight;
 
-      const goal = await Goal.find({ catId: diary._doc.catId }).sort({ date: -1 });
+      const goal = await Goal.find({ catId: diary._doc.catId }).sort({
+        date: -1,
+      });
       diary._doc.goal = goal;
       return res.status(200).json({ data: diary });
     } else {
-      return res.status(500).json({ message: "Cannot found diary with given id" })
+      return res
+        .status(500)
+        .json({ message: "Cannot found diary with given id" });
     }
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -522,7 +528,7 @@ router.post("/add-food/:diaryId", async (req, res) => {
 
     // Save fed food to db
     await dbFedFood.save();
-    Diary.findByIdAndUpdate( diaryId, { $inc: { food_calories: calories } });
+    Diary.findByIdAndUpdate(diaryId, { $inc: { food_calories: calories } });
     res.status(200).json({ message: "Add fed food successfully!" });
   } catch (err) {
     res.status(500).json({ message: JSON.stringify(err) });
@@ -576,13 +582,9 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
   const { amount } = req.body;
   const diary = await Diary.find({ diaryId: diaryId });
-  Diary.findByIdAndUpdate(diaryId, { $inc: { water_amount: amount} })
+  Diary.findByIdAndUpdate(diaryId, { water_amount: amount })
     .then(() => res.status(200).json({ message: "Update successful!" }))
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ message: JSON.stringify(err) })
-    );
+    .catch((err) => res.status(500).json({ message: JSON.stringify(err) }));
 });
 
 /**
@@ -631,13 +633,9 @@ router.put("/change-water-amount/:diaryId", async (req, res) => {
 router.put("/exercise/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
   const { exercise } = req.body;
-  Diary.findByIdAndUpdate(diaryId, {exercise: exercise})
+  Diary.findByIdAndUpdate(diaryId, { exercise: exercise })
     .then(() => res.status(200).json({ message: "Save Exercise successful!" }))
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ message: JSON.stringify(err) })
-    );
+    .catch((err) => res.status(500).json({ message: JSON.stringify(err) }));
 });
 
 /**
@@ -686,13 +684,9 @@ router.put("/exercise/:diaryId", async (req, res) => {
 router.put("/about/:diaryId", async (req, res) => {
   const { diaryId } = req.params;
   const { about } = req.body;
-  Diary.findByIdAndUpdate(diaryId, {about: about})
+  Diary.findByIdAndUpdate(diaryId, { about: about })
     .then(() => res.status(200).json({ message: "Save About successful!" }))
-    .catch((err) =>
-      res
-        .status(500)
-        .json({ message: JSON.stringify(err) })
-    );
+    .catch((err) => res.status(500).json({ message: JSON.stringify(err) }));
 });
 
 module.exports = router;

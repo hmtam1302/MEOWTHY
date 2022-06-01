@@ -22,12 +22,9 @@ const URL = "http://10.0.2.2:3000/";
 function Exercise({ route, navigation }) {
   const [value, onChangeText] = React.useState();
   const { diaryId } = route.params;
-  console.log(diaryId);
-
   const putExercise = async (value) => {
     try {
       const res = await axios.put(`${URL}diary/exercise/${diaryId}`, {
-        _id: diaryId,
         exercise: value,
       });
     } catch (error) {
@@ -70,7 +67,7 @@ function Exercise({ route, navigation }) {
               title="Lưu"
               onPress={() => {
                 putExercise(value);
-                navigation.goBack();
+                navigation.navigate("Nhật ký");
               }}
             />
           </View>

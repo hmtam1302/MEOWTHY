@@ -70,50 +70,36 @@ const data = [
     comment: "Tập luyện đều đặn, giảm cân đúng tiến độ",
   },
 ];
-// const _retrieveData = async (key) => {
-//   try {
-//     const value = await AsyncStorage.getItem(key);
-//     if (value !== null) {
-//       // We have data!!
-//       console.log(value);
-//     }
-//   } catch (error) {
-//     // Error retrieving data
-//   }
-// };
-
-// // _retrieveData("userId");
-// console.log();
+// 0
 const HEIGHT_CHART = 300;
 const MAX_KCAL = 1000;
-const { week, t2, t3, t4, t5, t6, t7, cn, Lweight, comment } = data.find(
-  (item) => item.week === 1
-);
-
-const HEIGHT_COLUMN = {
-  t2: (t2 * HEIGHT_CHART) / MAX_KCAL,
-  t3: (t3 * HEIGHT_CHART) / MAX_KCAL,
-  t4: (t4 * HEIGHT_CHART) / MAX_KCAL,
-  t5: (t5 * HEIGHT_CHART) / MAX_KCAL,
-  t6: (t6 * HEIGHT_CHART) / MAX_KCAL,
-  t7: (t7 * HEIGHT_CHART) / MAX_KCAL,
-  cn: (cn * HEIGHT_CHART) / MAX_KCAL,
-};
-
-const SUM = t2 + t3 + t4 + t5 + t6 + t7 + cn;
-const AVERAGE = Math.round(SUM / 7);
 
 function Report({ navigation }) {
-  const [selectedTeam, setSelectedTeam] = React.useState({});
-  const today = new Date();
-  const saveArticle = async (key, value) => {
-    try {
-      await AsyncStorage.setItem(key, value);
-    } catch (e) {
-      console.log(e);
-    }
+  const [selectedTeam, setSelectedTeam] = React.useState({
+    item: "week1",
+    id: 1,
+  });
+
+  const { week, t2, t3, t4, t5, t6, t7, cn, Lweight, comment } = data.find(
+    (item) => item.week === selectedTeam.id
+  );
+
+  const HEIGHT_COLUMN = {
+    t2: (t2 * HEIGHT_CHART) / MAX_KCAL,
+    t3: (t3 * HEIGHT_CHART) / MAX_KCAL,
+    t4: (t4 * HEIGHT_CHART) / MAX_KCAL,
+    t5: (t5 * HEIGHT_CHART) / MAX_KCAL,
+    t6: (t6 * HEIGHT_CHART) / MAX_KCAL,
+    t7: (t7 * HEIGHT_CHART) / MAX_KCAL,
+    cn: (cn * HEIGHT_CHART) / MAX_KCAL,
   };
-  saveArticle("picked", selectedTeam);
+
+  const SUM = t2 + t3 + t4 + t5 + t6 + t7 + cn;
+  const AVERAGE = Math.round(SUM / 7);
+
+  // -----------------------------------
+
+  const today = new Date();
 
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
@@ -137,7 +123,6 @@ function Report({ navigation }) {
                 </Text>
                 <View style={{ flexDirection: "row" }}>
                   <Text style={{ fontSize: 16, fontWeight: "400" }}>Tuần </Text>
-
                   <View>
                     <SelectBox
                       containerStyle={{
@@ -147,9 +132,19 @@ function Report({ navigation }) {
                         borderWidth: 1.5,
                         borderColor: colors.gray,
                       }}
-                      labelStyle={{ fontSize: 13 }}
-                      selectedItemStyle={{ fontSize: 13 }}
-                      optionsLabelStyle={{ fontSize: 13 }}
+                      optionContainerStyle={{}}
+                      listEmptyLabelStyle={{ position: "absolute", top: 0 }}
+                      labelStyle={{
+                        fontSize: 13,
+                      }}
+                      selectedItemStyle={{
+                        fontSize: 13,
+                      }}
+                      // optionContainerStyle={{ position: "absolute" }}
+                      optionsLabelStyle={{
+                        fontSize: 13,
+                        color: colors.dark_gray,
+                      }}
                       options={K_OPTIONS}
                       value={selectedTeam}
                       label=""
@@ -305,6 +300,7 @@ const styles = StyleSheet.create({
   header: {
     justifyContent: "space-between",
     flexDirection: "row",
+    // height: 60,
   },
   headerLeft: {},
   headerRight: {},
@@ -328,5 +324,4 @@ const styles = StyleSheet.create({
 
   paddingTop6: { paddingTop: 6 },
 });
-
 export default Report;

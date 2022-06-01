@@ -21,10 +21,20 @@ import _retrieveData from "../../assets/data/user";
 const image = require("../../assets/image/bgyl.png");
 const URL = "http://10.0.2.2:3000/";
 
-function AboutCat({ props, navigation }) {
+function AboutCat({ route, navigation }) {
   const [value, onChangeText] = React.useState();
 
-  const data = _retrieveData("userId");
+  const { diaryId } = route.params;
+  const putAboutCat = async (value) => {
+    try {
+      const res = await axios.put(`${URL}diary/about/${diaryId}`, {
+        about: value,
+      });
+    } catch (error) {
+      alert(error);
+    }
+  };
+
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
       <ScrollView
@@ -54,7 +64,13 @@ function AboutCat({ props, navigation }) {
           />
           <View style={styles.buttonWrap}>
             <RedButton title="Hủy" onPress={() => alert("hủy")} />
-            <BlueButton title="Lưu" onPress={() => alert("Lưu")} />
+            <BlueButton
+              title="Lưu"
+              onPress={() => {
+                putAboutCat(value);
+                navigation.navigate("Nhật ký");
+              }}
+            />
           </View>
         </SafeAreaView>
       </ScrollView>

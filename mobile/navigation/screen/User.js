@@ -16,7 +16,7 @@ import { launchImageLibrary } from "react-native-image-picker";
 
 import colors from "../../assets/colors/colors";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import userData from "../../assets/data/userData";
+
 import Feather from "react-native-vector-icons/Feather";
 import EditUserModal from "../../components/modal/EditUserModal.js";
 import SelectBox from "react-native-multi-selectbox";
@@ -38,10 +38,6 @@ function User({ navigation }) {
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [selectedTeam, setSelectedTeam] = React.useState({});
 
-  const wait = (timeout) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
-  };
-
   // -----------------function------------------
 
   const changeModalVisible = (bool) => {
@@ -61,6 +57,9 @@ function User({ navigation }) {
     }
   };
 
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getDataUser();

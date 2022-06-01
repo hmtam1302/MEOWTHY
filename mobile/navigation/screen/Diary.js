@@ -7,6 +7,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   ScrollView,
+  TextInput,
+  RefreshControl,
 } from "react-native";
 
 import Feather from "react-native-vector-icons/Feather";
@@ -26,17 +28,24 @@ function Diary({ navigation }) {
     day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
 
   // ------------------useState---------------------
+
   const [data, setData] = React.useState(diaryData);
   const [listDiary, setListDiary] = React.useState([]);
   const [diaryId, setDiaryId] = React.useState("");
 
+  const [compare, setCompare] = React.useState(true);
+
   const [date, setDate] = React.useState(new Date());
   const [show, setShow] = React.useState(false);
-  const [text, setText] = React.useState("Hôm nay");
+  const [dayTitle, setDayTitle] = React.useState("Hôm nay");
   const [count, setCount] = React.useState(0);
+  const [valueWater, onChangeValueWater] = React.useState(data.water_amount);
+
+  const [refreshing, setRefreshing] = React.useState(false);
 
   // ------------------function-----------------------
 
+  //pick day
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShow(false);
@@ -44,13 +53,30 @@ function Diary({ navigation }) {
 
     let tempDate = new Date(currentDate);
     let fDate =
-      tempDate.getDate() +
+      tempDate.getFullYear() +
       "-" +
       (tempDate.getMonth() + 1) +
       "-" +
-      tempDate.getFullYear();
-    setText(fDate);
+      tempDate.getDate();
+    setDayTitle(fDate);
+    compareDay(today, fDate);
   };
+
+  //compare
+  const compareDay = (today, pickerDay) => {
+    if (today === pickerDay) setCompare(true);
+    else setCompare(false);
+  };
+
+  // refresh
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getListDiary();
+    wait(1000).then(() => setRefreshing(false));
+  }, []);
 
   const handleAddDiary = (today) => {
     const todayDiary = listDiary.find((element) => element.date === today);
@@ -97,6 +123,19 @@ function Diary({ navigation }) {
       alert(error);
     }
   };
+  //  put water_amount
+  const putWater = async (valueWater) => {
+    try {
+      const res = await axios.put(
+        `${URL}diary/change-water-amount/${diaryId}`,
+        {
+          amount: valueWater,
+        }
+      );
+    } catch (error) {
+      alert(error);
+    }
+  };
 
   React.useEffect(() => {
     getListDiary();
@@ -113,6 +152,9 @@ function Diary({ navigation }) {
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         <SafeAreaView>
           <View style={styles.titleWrapper}>
@@ -131,7 +173,7 @@ function Diary({ navigation }) {
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.date}>{text}</Text>
+          <Text style={styles.date}>{dayTitle}</Text>
 
           {show && (
             <DateTimePicker
@@ -146,7 +188,15 @@ function Diary({ navigation }) {
           <View style={styles.boxWrapper}>
             {/* thức ăn */}
 
-            <TouchableOpacity onPress={() => navigation.navigate("Food")}>
+            <TouchableOpacity
+              onPress={() => {
+                compare
+                  ? navigation.navigate("Food", {
+                      diaryId: diaryId,
+                    })
+                  : false;
+              }}
+            >
               <View style={styles.boxtItem}>
                 <View style={styles.boxWrapperLeft}>
                   <View style={styles.boxWrapperTop}>
@@ -198,9 +248,13 @@ function Diary({ navigation }) {
           <View style={styles.boxWrapperLine2}>
             {/* tập luyện */}
             <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("Exercise", { diaryId: diaryId })
-              }
+              onPress={() => {
+                compare
+                  ? navigation.navigate("Exercise", {
+                      diaryId: diaryId,
+                    })
+                  : false;
+              }}
             >
               <View style={styles.boxtItem}>
                 <View style={styles.boxWrapperLeftLine2}>
@@ -228,12 +282,29 @@ function Diary({ navigation }) {
                 <Text style={styles.text_s16_w600}>Nước</Text>
                 <View style={[styles.boxWrapperTop, styles.circle]}>
                   <Text style={[styles.text_s16_w600, styles.center]}>
-                    {data.water_amount}%
+                    {data.water_amount / 2}%
                   </Text>
                 </View>
-                <View style={styles.boxWrapperBottom}>
-                  <Text style={styles.text_s13_400}>XXX ml</Text>
-                  <Text style={styles.text_s13_w400}>YYY ml</Text>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    marginBottom: 3,
+                  }}
+                >
+                  <TextInput
+                    style={styles.inputText}
+                    editable={compare}
+                    selectTextOnFocus={compare}
+                    onChangeText={(text) => onChangeValueWater(text)}
+                    value={valueWater}
+                    onBlur={() => {
+                      putWater(valueWater);
+                      wait(5000).then(() => onRefresh());
+                    }}
+                    placeholder={`${data.water_amount}`}
+                  />
+                  <Text style={styles.text_s13_w400}> / 200 ml</Text>
                 </View>
               </View>
               <View style={styles.boxWrapperRight}>
@@ -243,7 +314,15 @@ function Diary({ navigation }) {
           </View>
 
           {/* về bé */}
-          <TouchableOpacity onPress={() => navigation.navigate("AboutCat")}>
+          <TouchableOpacity
+            onPress={() => {
+              compare
+                ? navigation.navigate("AboutCat", {
+                    diaryId: diaryId,
+                  })
+                : false;
+            }}
+          >
             <View style={styles.boxtItemVeBe}>
               <View style={styles.boxWrapperLeft}>
                 <View style={styles.boxWrapperTop}>
@@ -359,14 +438,18 @@ const styles = StyleSheet.create({
   },
   center: {
     alignSelf: "center",
-    alignItems: "center",
-    marginVertical: 15,
+    textAlignVertical: "center",
+    height: "100%",
   },
   circle: {
-    flex: 1,
-    borderRadius: 40,
+    alignContent: "center",
+    width: 90,
+    height: 90,
+    borderRadius: 45,
     borderWidth: 10,
     borderColor: "#70CCB8",
+    marginBottom: 5,
+    backgroundColor: null,
   },
   boxtItemVeBe: {
     marginTop: 15,
@@ -381,6 +464,20 @@ const styles = StyleSheet.create({
   redTextsuggest: {
     marginTop: 15,
     color: colors.dark_red,
+  },
+  inputText: {
+    width: 40,
+    height: 20,
+    textAlignVertical: "center",
+    alignContent: "flex-end",
+    textAlign: "right",
+    paddingRight: 8,
+    fontSize: 13,
+    fontWeight: "400",
+    color: colors.black,
+    borderColor: colors.dark_gray,
+    borderWidth: 1,
+    borderRadius: 16,
   },
 });
 
