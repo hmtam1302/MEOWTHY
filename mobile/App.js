@@ -10,12 +10,12 @@ import LoginSign from "./navigation/LoginSign";
 import {AuthProvider} from './context/AuthContext';
 
 function App() {
-  //return <MainContainer />;
+  return <MainContainer />;
   
-  return
+  /*return
   <AuthProvider>
     <LoginSign />
-  </AuthProvider>;
+  </AuthProvider>;*/
 }
 
 export default App;

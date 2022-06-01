@@ -1,7 +1,7 @@
-import * as React from "react";
+import React, {useContext, useState} from 'react';
 import {
   Text,  View,  StyleSheet,  SafeAreaView,  ImageBackground,
-  Image,  FlatList,  TouchableOpacity,  ScrollView, TextInput
+  Image,  FlatList,  TouchableOpacity,  ScrollView, TextInput, Picker
 } from "react-native";
 
 import Feather from "react-native-vector-icons/Feather";
@@ -15,10 +15,14 @@ import BlueButton from "../../components/button/blueButton";
 
 const image = require("../../assets/image/bggreen.png");
 
-function AddCat({ props, navigation }) {
-const [value, onChangeText] = React.useState();
+function AddCat({ navigation }) {
+const [name, setName] = useState(null);
+const [age, setAge] = useState(null);
+const [breed, setBreed] = useState(null);
+const [weight, setWeight] = useState(null);
+const [bio, setBio] = useState(null);
+const [sex, setSex] = useState(null);
 
-const [dataCat, setDataCat] = React.useState(...catData);
 return (
 
     <ImageBackground source={image} style={styles.imageBgContainer}>
@@ -45,38 +49,51 @@ return (
         <View style={styles.container}>
             <View style={{alignSelf: 'center'}}>
             <TextInput style={styles.info_tt}
-            placeholder={dataCat.name}
+            placeholder="Tên bé"
+            value={name}
+            onChangeText={text=>setName(text)}
             />
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={styles.headertt}>Tuổi</Text>
               <TextInput style={styles.info}
-              placeholder={dataCat.age}
+              placeholder="tháng tuổi"
+              value={age}
+              onChangeText={text=>setAge(text)}
+
               />
               <Text style={styles.headertt}>Giới tính</Text>
-              <TextInput style={styles.info}
-              placeholder={dataCat.gender}
-              />
+              <Picker style={styles.infopicker}
+              value={sex}
+              onChangeText={(value) => setSex(value)}
+                >
+                  <Picker.Item label="Cái" value="Cái"/>
+                  <Picker.Item label="Đực" value="Đực"/>
+              </Picker>
             </View>
             <View style={styles.divinfo}>
               <Text style={styles.headertt}>Giống</Text>
               <TextInput style={styles.info}
-              placeholder={dataCat.kind}
+              placeholder="Giống mèo"
+              value={breed}
+              onChangeText={text=>setBreed(text)}
               />
             </View>
             <View  style={styles.divinfo}>
               <Text style={styles.headertt}>Cân nặng</Text>
               <TextInput style={styles.info}
-              placeholder={dataCat.weight}
+              placeholder="X.XX kg"
+              value={weight}
+              onChangeText={text=>setWeight(text)}
               />
             </View>
             <TextInput
             style={styles.inputText}
             multiline
-            value={value}
-            onChangeText={(text) => onChangeText(text)}
+            value={bio}
+            onChangeText={text => setBio(text)}
             numberOfLines={3}
-            placeholder={dataCat.about}/>
+            placeholder="Viết gì đó về bé nào !"/>
 
             <TouchableOpacity style={styles.button} onPress={()=>{alert("thêm thành công"); navigation.navigate("ListCat")}}><Text style={styles.textButton}>Lưu</Text></TouchableOpacity>
 
@@ -147,6 +164,12 @@ const styles = StyleSheet.create({
   info:{
     borderBottomColor: colors.dark_gray,
     borderBottomWidth: 1.5,
+    marginBottom: 10,
+    width: "30%",
+  },
+  infopicker:{
+    borderColor: colors.white,
+    backgroundColor: colors.white,
     marginBottom: 10,
     width: "30%",
   },

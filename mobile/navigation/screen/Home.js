@@ -19,7 +19,7 @@ function Home({ navigation }) {
 const [dataCat, setDataCat] = React.useState(...catData);
 
 function Gender (){
-  if (dataCat.gender === "male") {
+  if (dataCat.gender === "Đực") {
     return (
       <FontAwesome5 name="mars"  color={colors.red} size={16}/>
       );
@@ -50,7 +50,7 @@ return (
         <View style={styles.container}>
             <View style={{flexDirection:"row", alignSelf: "center", justifyContent: "center"}}>
 
-            <Text style={styles.nameCat}>{dataCat.name}</Text>
+            <Text style={styles.nameCat}>{dataCat.catName}</Text>
             <TouchableOpacity onPress={() => navigation.navigate("UpdateCat")} style={{justifyContent: "center", marginLeft: 10}}>      
               <FontAwesome5 name="pen"  color={colors.black} size={24}/>
             </TouchableOpacity>
@@ -59,19 +59,19 @@ return (
             <Text style={styles.ageCat}>{dataCat.age} tháng tuổi</Text>
             <Gender />
             </View>
-            <Text style={styles.ageCat}> {dataCat.kind} </Text>
+            <Text style={styles.ageCat}> {dataCat.breed} </Text>
             <View style={styles.about}>
                 <Text style={styles.ttCat}>Về bé:</Text>
-                <Text style={styles.aboutCat}>{dataCat.about}</Text>
+                <Text style={styles.aboutCat}>{dataCat.bio}</Text>
             </View>
             
             <View style={styles.weight}>
                 <Text style={styles.ttCat}> Cân nặng hiện tại</Text>
-                <Text style={styles.info}>{dataCat.weight} kg</Text>
+                <Text style={styles.info}>{dataCat.weight[0].catWeight} kg</Text>
             </View>
             <View style={styles.weight}>
                 <Text style={styles.ttCat}> Mục tiêu </Text>
-                <Text style={styles.info}>{dataCat.target} kg</Text>
+                <Text style={styles.info}>{dataCat.goal[0].catGoal} kg</Text>
             </View>
              
         </View>
