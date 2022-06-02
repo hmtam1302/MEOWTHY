@@ -105,7 +105,7 @@ function MainContainer() {
               iconName = focused ? "notifications" : "notifications-outline";
             } else if (rn === nameUser) {
               iconName = focused ? "person" : "person-outline";
-            } else if (rn === nameHome) {
+            } else if (rn === "Nhà") {
               iconName = focused ? "home" : "home-outline";
             } else if (rn === nameReport) {
               iconName = focused ? "bar-chart" : "bar-chart-outline";
@@ -123,7 +123,7 @@ function MainContainer() {
       >
         <Tab.Screen
           options={{ headerShown: false }}
-          name={nameHome}
+          name="Nhà"
           component={HomeStack}
         />
         <Tab.Screen

@@ -5,13 +5,14 @@ const catData = [
     catName: "Meow",
     sex: "Cái",
     breed: "Mèo ta",
+    age: "2",
     bio: "bé năng động",
     __v: 0,
     weight: [
         {
             _id: "62955667b48a7ae7d3224d33",
             catId: "62955667b48a7ae7d3224d31",
-            catWeight: 2,
+            catWeight: '2',
             date: "2022-05-30T23:42:31.810Z",
             __v: 0
         }
@@ -31,6 +32,7 @@ const catData = [
   userId: "62955667b48a7ae7d3224d2f",
   catName: "Meow",
   sex: "Cái",
+  age: "2",
   bio: "bé năng động",
   breed: "Mèo ta",
   __v: 0,
@@ -38,7 +40,7 @@ const catData = [
       {
           _id: "62955667b48a7ae7d3224d33",
           catId: "62955667b48a7ae7d3224d31",
-          catWeight: 2,
+          catWeight: '2',
           date: "2022-05-30T23:42:31.810Z",
           __v: 0
       }
@@ -57,6 +59,7 @@ const catData = [
   userId: "62955667b48a7ae7d3224d2f",
   catName: "Meow",
   sex: "Cái",
+  age: "2",
   bio: "bé năng động",
   breed: "Mèo ta",
   __v: 0,
@@ -64,7 +67,7 @@ const catData = [
       {
           _id: "62955667b48a7ae7d3224d33",
           catId: "62955667b48a7ae7d3224d31",
-          catWeight: 2,
+          catWeight: '2',
           date: "2022-05-30T23:42:31.810Z",
           __v: 0
       }

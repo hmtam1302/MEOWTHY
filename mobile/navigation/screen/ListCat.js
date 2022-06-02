@@ -55,8 +55,6 @@ function ListCat({ navigation }) {
   };
   return (
     <ImageBackground source={image} style={styles.imageBgContainer}>
-      <ScrollView contentInsetAdjustmentBehavior="automatic"
-        showsVerticalScrollIndicator={false}>
       <SafeAreaView>
         <View style={styles.titleWrapper}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -85,7 +83,6 @@ function ListCat({ navigation }) {
           </View>
         </View>
       </SafeAreaView>
-      </ScrollView>
     </ImageBackground>
   );
 }
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderRadius: 10,
     padding: 20,
-    height: 600,
+    height: 520,
   },
   addCat:{
       alignItems: "center",

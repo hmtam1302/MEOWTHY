@@ -1,9 +1,9 @@
 import React, {useContext, useState} from 'react';
 import {
   Text,  View,  StyleSheet,  SafeAreaView,  ImageBackground,
-  Image,  FlatList,  TouchableOpacity,  ScrollView, TextInput,Picker
+  Image,  FlatList,  TouchableOpacity,  ScrollView, TextInput,
 } from "react-native";
-
+import SelectBox from "react-native-multi-selectbox";
 import Feather from "react-native-vector-icons/Feather";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import colors from "../../assets/colors/colors";
@@ -15,15 +15,19 @@ import BlueButton from "../../components/button/blueButton";
 
 const image = require("../../assets/image/bggreen.png");
 
+const Sex_option = [
+  { id: 1, item: "Cái" },
+  { id: 2, item: "Đực" },
+];
+
 function UpdateCat({navigation }) {
 const [dataCat, setDataCat] = React.useState(...catData);
-
-const [name, setName] = useState(null);
-const [age, setAge] = useState(null);
-const [breed, setBreed] = useState(null);
-const [weight, setWeight] = useState(null);
-const [bio, setBio] = useState(null);
-const [sex, setSex] = useState(null);
+const [name, setName] = useState(dataCat.catName);
+const [age, setAge] = useState(dataCat.age);
+const [breed, setBreed] = useState(dataCat.breed);
+const [weight, setWeight] = useState(dataCat.weight[0].catWeight);
+const [bio, setBio] = useState(dataCat.bio);
+const [sex, setSex] = useState(dataCat.sex);
 
 return (
 
@@ -64,13 +68,23 @@ return (
               onChangeText={text=>setAge(text)}
               />
               <Text style={styles.headertt}>Giới tính</Text>
-              <Picker style={styles.infopicker}
-              value={sex}
-              onChangeText={value => setSex(value)}
-                >
-                  <Picker.Item label="Cái" value="Cái"/>
-                  <Picker.Item label="Đực" value="Đực"/>
-              </Picker>
+              
+              <View style={{ marginBottom: 5 }}>
+                  <SelectBox
+                    containerStyle={{
+                      marginTop: -20,
+                      borderWidth: 0,
+                    }}
+                    labelStyle={{ fontSize: 13 }}
+                    selectedItemStyle={{ fontSize: 13 }}
+                    optionsLabelStyle={{ fontSize: 13 }}
+                    options={Sex_option}
+                    value={sex}
+                    label=""
+                    onChange={(val) => setSex(val)}
+                    hideInputFilter={true}
+                  />
+                </View>
             </View>
             <View style={styles.divinfo}>
               <Text style={styles.headertt}>Giống</Text>
@@ -94,7 +108,8 @@ return (
             value={bio}
             onChangeText={(text) => setBio(text)}
             numberOfLines={3}
-            placeholder={dataCat.bio}/>
+            placeholder={dataCat.bio}
+            />
 
             <TouchableOpacity style={styles.button} onPress={()=>{alert("Sửa thành công"); navigation.navigate("Home")}}><Text style={styles.textButton}>Lưu</Text></TouchableOpacity>
 

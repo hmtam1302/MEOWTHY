@@ -8,7 +8,9 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import colors from "../../../assets/colors/colors";
 
 const image = require("../../../assets/image/bgpurple.png");
-const URL = "https://meowthy-project.herokuapp.com"
+const URL = "http://meowthy-project.herokuapp.com";
+//const URL = "http://10.0.2.2:3000";
+
 import axios from 'axios';
 
 function Login({ navigation, setIsLoggedIn }) {
@@ -16,14 +18,17 @@ function Login({ navigation, setIsLoggedIn }) {
     const [password, setPassword] = useState(null);
     const [loading, setLoading] = useState(false);
     const login = async () => {
-        const body = { username, password };
+        //const body = { username, password };
         setLoading(true);
         try {
-            await axios.post(`${URL}/user/signin`, body);
+            await axios.post(`${URL}/user/signin`, {
+              username : username,
+              password : password
+            });
             setIsLoggedIn(true);
         } catch (err) {
             setIsLoggedIn(false);
-            console.err(err);
+            console.log(err);
         }
         setLoading(false);
     }
